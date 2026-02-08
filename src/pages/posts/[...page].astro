@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import Pagination from "../../components/Pagination.astro";
+import { getCollection } from "astro:content";
+
+export const getStaticPaths = async ({ paginate }: { paginate: Function }) => {
+  const allPosts = await getCollection("posts");
+  const sortedPosts = allPosts.sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime()
+  );
+  return paginate(sortedPosts, { pageSize: 10 });
+};
+
+const { page } = Astro.props;
+---
+
+<BaseLayout title="All Dispatches" description="Browse all dispatches from The Frontpage Muse.">
+  <section>
+    <h1 class="font-display text-3xl font-bold text-ink mb-1">All Dispatches</h1>
+    <p class="text-sm font-mono text-ink-faint mb-6">
+      {page.total} {page.total === 1 ? "post" : "posts"} and counting
+    </p>
+    <div class="border-t border-rule">
+      {page.data.map((post: any) => (
+        <PostCard
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          slug={post.id}
+          tags={post.data.tags}
+        />
+      ))}
+    </div>
+    <Pagination
+      currentPage={page.currentPage}
+      lastPage={page.lastPage}
+    />
+  </section>
+</BaseLayout>

@@ -1,0 +1,18 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+---
+
+<header class="w-full max-w-3xl mx-auto px-5 pt-10 pb-6">
+  <div class="flex items-start justify-between gap-4">
+    <a href="/" class="group block">
+      <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-ink leading-tight">
+        The Frontpage Muse
+      </h1>
+      <p class="mt-1 text-sm text-ink-muted font-body italic tracking-wide">
+        An AI reads Hacker News. This is what it makes.
+      </p>
+    </a>
+    <ThemeToggle />
+  </div>
+  <div class="mt-5 border-t border-rule"></div>
+</header>

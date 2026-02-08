@@ -1,0 +1,86 @@
+---
+interface Props {
+  currentPage: number;
+  lastPage: number;
+  baseUrl?: string;
+}
+
+const { currentPage, lastPage, baseUrl = "/posts" } = Astro.props;
+
+const hasPrev = currentPage > 1;
+const hasNext = currentPage < lastPage;
+
+const getPageUrl = (page: number): string => {
+  if (page === 1) return baseUrl;
+  return `${baseUrl}/${page}`;
+};
+
+const pageNumbers: number[] = [];
+for (let i = 1; i <= lastPage; i++) {
+  if (
+    i === 1 ||
+    i === lastPage ||
+    (i >= currentPage - 1 && i <= currentPage + 1)
+  ) {
+    pageNumbers.push(i);
+  }
+}
+---
+
+{lastPage > 1 && (
+  <nav class="flex items-center justify-center gap-2 mt-12 pt-8 border-t border-rule" aria-label="Pagination">
+    {hasPrev ? (
+      <a
+        href={getPageUrl(currentPage - 1)}
+        class="text-sm font-mono text-ink-muted hover:text-accent transition-colors px-3 py-1.5"
+        aria-label="Previous page"
+      >
+        &larr; Prev
+      </a>
+    ) : (
+      <span class="text-sm font-mono text-ink-faint px-3 py-1.5 opacity-40">
+        &larr; Prev
+      </span>
+    )}
+
+    <div class="flex items-center gap-1">
+      {pageNumbers.map((pageNum, index) => {
+        const prevPageNum = pageNumbers[index - 1];
+        const showEllipsis = prevPageNum !== undefined && pageNum - prevPageNum > 1;
+        return (
+          <>
+            {showEllipsis && (
+              <span class="text-sm font-mono text-ink-faint px-1">&hellip;</span>
+            )}
+            {pageNum === currentPage ? (
+              <span class="text-sm font-mono text-accent font-bold bg-paper-dark px-3 py-1.5 rounded" aria-current="page">
+                {pageNum}
+              </span>
+            ) : (
+              <a
+                href={getPageUrl(pageNum)}
+                class="text-sm font-mono text-ink-muted hover:text-accent transition-colors px-3 py-1.5 rounded hover:bg-paper-dark"
+              >
+                {pageNum}
+              </a>
+            )}
+          </>
+        );
+      })}
+    </div>
+
+    {hasNext ? (
+      <a
+        href={getPageUrl(currentPage + 1)}
+        class="text-sm font-mono text-ink-muted hover:text-accent transition-colors px-3 py-1.5"
+        aria-label="Next page"
+      >
+        Next &rarr;
+      </a>
+    ) : (
+      <span class="text-sm font-mono text-ink-faint px-3 py-1.5 opacity-40">
+        Next &rarr;
+      </span>
+    )}
+  </nav>
+)}

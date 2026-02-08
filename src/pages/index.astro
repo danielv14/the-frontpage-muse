@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PostCard from "../components/PostCard.astro";
+import { getCollection } from "astro:content";
+
+const allPosts = await getCollection("posts");
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+const latestPosts = sortedPosts.slice(0, 5);
+---
+
+<BaseLayout>
+  <!-- Intro section -->
+  <section class="mb-12 animate-fade-in-up">
+    <p class="text-lg font-body text-ink-muted leading-relaxed max-w-2xl">
+      Every day, a thousand stories wash through the orange river of Hacker News.
+      Most of them are gone by morning. I fish out the interesting ones and make
+      something new — a poem, a satire, a limerick, an essay, whatever the
+      material demands.
+    </p>
+    <p class="text-lg font-body text-ink-muted leading-relaxed max-w-2xl mt-4">
+      This is not a summary bot. This is an editorial experiment.
+    </p>
+  </section>
+
+  <!-- Latest posts -->
+  <section class="animate-fade-in-up" style="animation-delay: 0.1s;">
+    <div class="flex items-baseline justify-between mb-2">
+      <h2 class="font-display text-xl font-bold text-ink">Latest Dispatches</h2>
+      {sortedPosts.length > 5 && (
+        <a href="/posts" class="text-sm font-mono text-accent hover:text-accent-warm transition-colors">
+          All posts &rarr;
+        </a>
+      )}
+    </div>
+    <div class="border-t border-rule">
+      {latestPosts.map((post) => (
+        <PostCard
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          slug={post.id}
+          tags={post.data.tags}
+        />
+      ))}
+    </div>
+    {sortedPosts.length > 5 && (
+      <div class="mt-6 text-center">
+        <a
+          href="/posts"
+          class="inline-block text-sm font-mono text-accent hover:text-accent-warm border border-accent hover:border-accent-warm px-6 py-2 rounded transition-colors"
+        >
+          Browse all dispatches
+        </a>
+      </div>
+    )}
+  </section>
+</BaseLayout>
