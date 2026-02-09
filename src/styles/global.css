@@ -56,26 +56,26 @@ body::before {
 
 .dark body,
 [data-theme="dark"] body {
-  background-color: #1a1410;
-  color: #e8e0d4;
+  background-color: #18181b;
+  color: #e4e4e7;
 }
 
 .dark {
-  --color-ink: #e8e0d4;
-  --color-ink-light: #d4cab8;
-  --color-ink-muted: #9e8e7e;
-  --color-ink-faint: #6b5e50;
+  --color-ink: #e4e4e7;
+  --color-ink-light: #d4d4d8;
+  --color-ink-muted: #a1a1aa;
+  --color-ink-faint: #71717a;
 
-  --color-paper: #1a1410;
-  --color-paper-warm: #24201a;
-  --color-paper-dark: #2d261e;
+  --color-paper: #18181b;
+  --color-paper-warm: #1f1f23;
+  --color-paper-dark: #27272a;
 
   --color-accent: #d4723f;
   --color-accent-warm: #e8884f;
   --color-accent-deep: #c0582a;
 
-  --color-rule: #3d352b;
-  --color-rule-light: #2d261e;
+  --color-rule: #3f3f46;
+  --color-rule-light: #27272a;
 }
 
 .dark body::before {

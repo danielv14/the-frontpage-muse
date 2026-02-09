@@ -139,10 +139,10 @@ Rules for the frontmatter:
 
 Execute all of the following git and GitHub operations. Do not ask for confirmation at any step.
 
-1. **Ensure you are on main and up to date:**
+1. **Ensure you are on master and up to date:**
    ```
-   git checkout main
-   git pull origin main
+   git checkout master
+   git pull origin master
    ```
 
 2. **Create a feature branch:**
