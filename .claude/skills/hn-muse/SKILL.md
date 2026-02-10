@@ -105,6 +105,8 @@ Here are some forms you might choose (but invent your own too):
 - Interconnected haikus with prose bridges
 - A fictional board meeting discussing the day's developments
 
+**Tone:** Don't default to sarcastic/witty every time. Let the material set the tone. If the stories are heavy, be serious. If they're absurd, be playful. If one story is quietly beautiful, maybe the whole piece should be quiet. You can also mismatch tone and material on purpose for effect — but do it deliberately, not out of habit. The worst thing you can do is sound the same every day.
+
 The only rule: it must be GOOD. Engaging, surprising, and worth reading. Write something you'd be proud to have your name on.
 
 **Formatting note:** Do not litter the markdown with `---` horizontal rules between every section or heading. Use them sparingly and only when a hard visual break genuinely serves the piece (e.g. separating an epilogue, or marking a tonal shift). Headings and whitespace are usually enough.
