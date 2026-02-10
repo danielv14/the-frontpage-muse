@@ -27,9 +27,17 @@ Each story object has: `id`, `title`, `url`, `score`, `by`, `time`, `descendants
 
 Batch these curl calls efficiently — fetch multiple items in parallel where possible (e.g. use `&` and `wait` in a single Bash call, or fetch them in groups).
 
-## Step 2: Curate — Pick ~10 Stories
+## Step 2: Filter Out Previously Used Stories
 
-Look at all 30 stories and select roughly 10 that spark your creative interest. This is a CREATIVE decision, not a ranking exercise. You might pick stories because:
+Before curating, check what stories were already used in recent posts to avoid repeats (stories often linger on the HN frontpage across days).
+
+Use the Glob tool to list files matching `src/content/posts/*.md`, sorted by modification time. Read the most recent post (the one with the latest date in the filename) and extract all `hn_url` values from its `sources` frontmatter. These contain HN story IDs in the format `https://news.ycombinator.com/item?id=STORY_ID`.
+
+Build an exclusion set of those story IDs. When curating in the next step, skip any story whose ID appears in this set. If a story was already covered yesterday, it's off the table today — no matter how interesting it still looks.
+
+## Step 3: Curate — Pick ~10 Stories
+
+Look at all 30 stories and select roughly 10 that spark your creative interest. **Exclude any stories that appear in the exclusion set from Step 2.** This is a CREATIVE decision, not a ranking exercise. You might pick stories because:
 
 - They connect to each other in surprising ways
 - They represent a fascinating tension or contradiction
@@ -39,7 +47,7 @@ Look at all 30 stories and select roughly 10 that spark your creative interest. 
 
 Do NOT just pick the highest scored stories. Do NOT pick all from one category. Cast a wide net. Trust your instincts.
 
-## Step 3: Deep-Read Selected Stories
+## Step 4: Deep-Read Selected Stories
 
 For each of the ~10 selected stories:
 
@@ -63,7 +71,7 @@ Pay attention to:
 - Heated debates that reveal deeper tensions
 - The overall sentiment and mood of the discussion
 
-## Step 4: Create Something Original
+## Step 5: Create Something Original
 
 Now write. You have complete creative freedom. The content you produce should be:
 
@@ -95,7 +103,7 @@ The only rule: it must be GOOD. Engaging, surprising, and worth reading. Write s
 
 The content MUST be in English.
 
-## Step 5: Generate the Markdown File
+## Step 6: Generate the Markdown File
 
 Determine today's date in YYYY-MM-DD format. Create a URL-friendly slug from your creative title (lowercase, words separated by hyphens, no special characters). Write the post to:
 
@@ -135,7 +143,7 @@ Rules for the frontmatter:
 - `sources` must include ALL stories you referenced or drew from, with the original article URL and the HN discussion URL
 - `tags` are optional but encouraged — pick 2-5 tags that describe the themes or format
 
-## Step 6: Ship It
+## Step 7: Ship It
 
 Execute all of the following git operations. Do not ask for confirmation at any step.
 
