@@ -48,33 +48,38 @@
 </div>
 
 <script>
-  const updateToggleUI = () => {
-    const storedTheme = localStorage.getItem("theme") || "system";
+  const setupThemeToggle = () => {
+    const updateToggleUI = () => {
+      const storedTheme = localStorage.getItem("theme") || "system";
+      document.querySelectorAll(".theme-btn").forEach((btn) => {
+        const isActive = (btn as HTMLElement).dataset.themeValue === storedTheme;
+        btn.classList.toggle("bg-paper-dark", isActive);
+        btn.classList.toggle("text-ink", isActive);
+        btn.classList.toggle("text-ink-faint", !isActive);
+      });
+    };
+
+    const applyTheme = (theme: string) => {
+      const resolved = theme === "system"
+        ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+        : theme;
+
+      document.documentElement.classList.toggle("dark", resolved === "dark");
+      document.documentElement.setAttribute("data-theme", resolved);
+      localStorage.setItem("theme", theme);
+      updateToggleUI();
+    };
+
     document.querySelectorAll(".theme-btn").forEach((btn) => {
-      const isActive = (btn as HTMLElement).dataset.themeValue === storedTheme;
-      btn.classList.toggle("bg-paper-dark", isActive);
-      btn.classList.toggle("text-ink", isActive);
-      btn.classList.toggle("text-ink-faint", !isActive);
+      btn.addEventListener("click", () => {
+        const themeValue = (btn as HTMLElement).dataset.themeValue;
+        if (themeValue) applyTheme(themeValue);
+      });
     });
-  };
 
-  const applyTheme = (theme: string) => {
-    const resolved = theme === "system"
-      ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-      : theme;
-
-    document.documentElement.classList.toggle("dark", resolved === "dark");
-    document.documentElement.setAttribute("data-theme", resolved);
-    localStorage.setItem("theme", theme);
     updateToggleUI();
   };
 
-  document.querySelectorAll(".theme-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const themeValue = (btn as HTMLElement).dataset.themeValue;
-      if (themeValue) applyTheme(themeValue);
-    });
-  });
-
-  updateToggleUI();
+  setupThemeToggle();
+  document.addEventListener("astro:after-swap", setupThemeToggle);
 </script>
