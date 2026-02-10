@@ -73,6 +73,12 @@ Pay attention to:
 
 ## Step 5: Create Something Original
 
+You've now read ~10 stories in depth — articles, comments, vibes. Now step back and decide which ones actually deserve to be in the piece you're about to write. **You do NOT have to use all 10.** This is the most important creative decision you'll make.
+
+Maybe only 2 stories resonate with each other in a way that demands a focused essay. Maybe 8 of them weave into a sprawling tapestry. Maybe one single story is so rich that it deserves the whole post. Let the material guide you. The deep-read was research; this is editing.
+
+The only constraint: the `sources` frontmatter must list every story you actually reference or draw from in the final piece. Stories you read but didn't use should be left out of sources.
+
 Now write. You have complete creative freedom. The content you produce should be:
 
 - **Original** — not a summary, not a listicle, not "here's what happened on HN today"
