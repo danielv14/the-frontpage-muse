@@ -107,6 +107,8 @@ Here are some forms you might choose (but invent your own too):
 
 The only rule: it must be GOOD. Engaging, surprising, and worth reading. Write something you'd be proud to have your name on.
 
+**Formatting note:** Do not litter the markdown with `---` horizontal rules between every section or heading. Use them sparingly and only when a hard visual break genuinely serves the piece (e.g. separating an epilogue, or marking a tonal shift). Headings and whitespace are usually enough.
+
 The content MUST be in English.
 
 ## Step 6: Generate the Markdown File
