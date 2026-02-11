@@ -34,7 +34,7 @@ body {
   font-family: var(--font-body);
   background-color: var(--color-paper);
   color: var(--color-ink);
-  font-size: 1.3125rem;
+  font-size: 1rem;
   line-height: 1.75;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -103,20 +103,20 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .prose h1 {
-  font-size: 3rem;
+  font-size: 2.25rem;
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
 
 .prose h2 {
-  font-size: 2.15rem;
+  font-size: 1.75rem;
   margin-top: 2.5rem;
   margin-bottom: 0.75rem;
   padding-bottom: 0.5rem;
 }
 
 .prose h3 {
-  font-size: 1.65rem;
+  font-size: 1.375rem;
   margin-top: 2rem;
   margin-bottom: 0.5rem;
 }
