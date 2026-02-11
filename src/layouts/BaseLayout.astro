@@ -53,7 +53,14 @@ const pageTitle = title === "The Frontpage Muse" ? title : `${title} — The Fro
       };
 
       applyTheme();
-      document.addEventListener("astro:after-swap", applyTheme);
+      document.addEventListener("astro:before-swap", (event) => {
+        const theme = getThemePreference();
+        const resolved = theme === "system"
+          ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+          : theme;
+        event.newDocument.documentElement.classList.toggle("dark", resolved === "dark");
+        event.newDocument.documentElement.setAttribute("data-theme", resolved);
+      });
 
       window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
         const storedTheme = localStorage.getItem("theme");
