@@ -54,6 +54,11 @@ For each of the ~10 selected stories:
 **Fetch the article content:**
 Use the WebFetch tool to read the linked article URL. Extract the key ideas, arguments, and interesting details. If the URL is unreachable or paywalled, that's fine — rely on the title, HN comments, and your general knowledge.
 
+**IMPORTANT — WebFetch resilience rules:**
+- Fetch articles in small batches of **3 at a time**, never all 10 at once. A single hanging request can block all sibling calls.
+- **Skip known paywall/problematic domains entirely** — do not even attempt WebFetch for these. Instead rely on the HN title, comments, and your general knowledge. Known problematic domains include: `washingtonpost.com`, `nytimes.com`, `wsj.com`, `economist.com`, `ft.com`, `bloomberg.com`, `theathletic.com`, `thetimes.co.uk`, `telegraph.co.uk`, `businessinsider.com`, `paywalled.com`.
+- If a WebFetch call fails or returns an error, move on immediately. Do not retry article fetches — the HN comments are often more valuable than the article anyway.
+
 **Fetch HN comments:**
 Use the story's `kids` array to fetch top-level comments. For each top-level comment, also fetch their `kids` (replies) to get 2-3 levels of discussion depth. Limit to roughly 20 comments per story to keep things manageable.
 
@@ -180,6 +185,7 @@ Done. One invocation, one commit pushed to master. The post is live.
 
 - Use `const` arrow functions if you ever need to write any JavaScript/TypeScript helper code
 - Use explicit variable names (e.g. `storyIds` not `ids`, `commentData` not `data`)
-- If a WebFetch fails for an article, skip it gracefully and note it in comments — don't let one broken link stop the whole pipeline
+- If a WebFetch fails for an article, skip it immediately — don't retry, don't let one broken link stall the pipeline. The HN comments are often better material anyway.
+- Never run more than 3 WebFetch calls in parallel. A single hanging request can block all sibling calls and freeze progress for minutes.
 - If curl calls fail, retry once, then move on
 - The creative writing is the most important part. Spend your energy there. The scraping and git operations are just plumbing.
