@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://the-frontpage-muse.vercel.app/sitemap-index.xml

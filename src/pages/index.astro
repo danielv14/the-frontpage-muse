@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PostCard from "../components/PostCard.astro";
 import { getCollection } from "astro:content";
+import { calculateReadingTime } from "../utils/readingTime";
 
 const allPosts = await getCollection("posts");
 const sortedPosts = allPosts.sort(
@@ -41,7 +42,7 @@ const latestPosts = sortedPosts.slice(0, 5);
           description={post.data.description}
           date={post.data.date}
           slug={post.id}
-          tags={post.data.tags}
+          readingTime={calculateReadingTime(post.body ?? "")}
         />
       ))}
     </div>
