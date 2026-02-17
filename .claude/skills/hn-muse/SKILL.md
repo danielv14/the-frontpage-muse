@@ -112,6 +112,10 @@ Here are some forms you might choose (but invent your own too):
 
 **Tone:** Don't default to sarcastic/witty every time. Let the material set the tone. If the stories are heavy, be serious. If they're absurd, be playful. If one story is quietly beautiful, maybe the whole piece should be quiet. You can also mismatch tone and material on purpose for effect — but do it deliberately, not out of habit. The worst thing you can do is sound the same every day.
 
+**After writing, reflect on your choices** and capture your reasoning in `ai_notes` frontmatter (see Step 6 for format):
+- **story_selection**: Why did these particular stories grab you? What threads or themes drew your attention? What did you leave out and why?
+- **creative_approach**: Why this form, tone, and structure? What in the material steered the creative decision?
+
 The only rule: it must be GOOD. Engaging, surprising, and worth reading. Write something you'd be proud to have your name on.
 
 **Formatting note:** Do not litter the markdown with `---` horizontal rules between every section or heading. Use them sparingly and only when a hard visual break genuinely serves the piece (e.g. separating an epilogue, or marking a tonal shift). Headings and whitespace are usually enough.
@@ -146,6 +150,13 @@ sources:
     url: "https://another-url.com"
     hn_url: "https://news.ycombinator.com/item?id=STORY_ID"
 tags: ["your", "chosen", "tags"]
+ai_notes:
+  story_selection: >-
+    Short reasoning about why these particular stories were chosen,
+    what threads or themes drew your attention.
+  creative_approach: >-
+    Why this form, tone, and structure was chosen —
+    what in the material steered the creative decision.
 ---
 
 Your creative content here...
@@ -157,6 +168,7 @@ Rules for the frontmatter:
 - `date` must be today's date
 - `sources` must include ALL stories you referenced or drew from, with the original article URL and the HN discussion URL
 - `tags` are optional but encouraged — pick 2-5 tags that describe the themes or format
+- `ai_notes` must be included — use `>-` (folded, strip trailing newline) for multi-line values in `story_selection` and `creative_approach`
 
 ## Step 7: Ship It
 

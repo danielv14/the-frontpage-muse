@@ -44,6 +44,26 @@ const formatDate = (d: Date): string => {
           ))}
         </div>
       )}
+      {post.data.ai_notes && (
+        <details class="mt-4">
+          <summary class="text-sm font-mono text-ink-faint cursor-pointer hover:text-accent transition-colors select-none">
+            Behind the curtain
+          </summary>
+          <div class="mt-3 space-y-3 text-lg font-body text-ink-muted">
+            <div>
+              <h3 class="font-mono text-base text-ink-faint uppercase tracking-wide mb-1">Story selection</h3>
+              <p class="leading-relaxed">{post.data.ai_notes.story_selection}</p>
+            </div>
+            <div>
+              <h3 class="font-mono text-base text-ink-faint uppercase tracking-wide mb-1">Creative approach</h3>
+              <p class="leading-relaxed">{post.data.ai_notes.creative_approach}</p>
+            </div>
+            <p class="text-base text-ink-faint italic mt-4">
+              This is the AI's reasoning behind the selection of articles and why this particular post was written.
+            </p>
+          </div>
+        </details>
+      )}
       <div class="mt-6 border-t border-rule"></div>
     </header>
 

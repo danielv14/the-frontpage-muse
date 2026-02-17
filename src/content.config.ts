@@ -16,6 +16,10 @@ const posts = defineCollection({
       })
     ),
     tags: z.array(z.string()).optional(),
+    ai_notes: z.object({
+      story_selection: z.string(),
+      creative_approach: z.string(),
+    }).optional(),
   }),
 });
 
