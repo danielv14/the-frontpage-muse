@@ -14,14 +14,20 @@ npm run preview  # Preview production build
 
 ## How Content is Generated
 
-Posts are generated via the `/hn-muse` Claude Code skill. One invocation:
+Posts are generated via the `/hn-muse` Claude Code skill, which uses a two-agent system:
 
-1. Scrapes the HN frontpage via the Firebase API
-2. AI picks ~10 interesting stories
-3. Deep-reads articles and HN comments
-4. Creates original creative content (not summaries)
-5. Writes a markdown post with frontmatter
-6. Branches, commits, pushes, and opens a PR
+- **Editor** (the skill itself) — spawns the writer, reviews the creative pitch and final draft, handles git operations
+- **Writer** (`.claude/agents/hn-writer.md`) — scrapes HN, curates stories, deep-reads articles and comments, proposes a creative direction, writes the draft
+
+One invocation:
+
+1. Editor spawns a writer agent via `TeamCreate`
+2. Writer scrapes HN, curates ~10 stories, deep-reads articles and comments
+3. Writer sends a creative pitch to the editor
+4. Editor reviews for format freshness (no repeating recent formats) and creative interest
+5. Writer writes the full draft post
+6. Editor reviews against frontmatter and content quality checklists
+7. Editor commits and pushes to master
 
 Run `/hn-muse` to generate a new post. Each post lands in `src/content/posts/YYYY-MM-DD-slug.md`.
 
@@ -34,6 +40,9 @@ src/
   pages/             # Astro pages (index, post listing, individual posts)
   components/        # Astro components (Header, Footer, PostCard, etc.)
   styles/            # global.css — Tailwind 4 theme and custom styles
+.claude/
+  skills/hn-muse/    # Editor skill — orchestrates the pipeline
+  agents/hn-writer.md # Writer agent — research and creative writing
 ```
 
 ## Conventions
