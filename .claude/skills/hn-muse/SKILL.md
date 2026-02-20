@@ -21,15 +21,24 @@ When this skill is invoked, execute the ENTIRE pipeline below. No pauses, no ask
 
 The writer will scrape HN, deep-read articles and comments, then send you a creative pitch. Evaluate it:
 
-- **Format freshness:** Does it repeat the format of the most recent post or the one before? The writer has read the two latest posts — if the pitch still repeats a recent format, redirect.
+- **Format freshness:** Does it repeat the format of the most recent post or the one before? Read the two latest posts' `ai_notes.creative_approach` yourself to check. If the pitch repeats a recent format, redirect.
 - **Creative interest:** Is the direction surprising, original, worth reading? Would you want to read this?
 - **Material fit:** Does the chosen format serve the material, or is it forced?
+- **Structural independence:** Does the pitch describe an *idea* — a thesis, observation, or question? Or does it describe a *format + a list of articles*? If the pitch is essentially "I'll write about these N articles in the form of X", ask for rework. The pitch must lead with what the piece is *about*, not what it *contains*.
 
 Respond with ONE of:
 - **Approved** (with optional brief notes like "lean into X" or "the Y angle is strongest")
 - **Redirect** with specific guidance (e.g., "The last two posts were meditative — try something with more energy" or "Stories #3 and #7 have a natural tension worth exploring")
 
 You get at most 1 redirect. After that, approve whatever the writer proposes.
+
+### Structural guidance on approval
+
+When you approve the pitch, you MUST include concrete structural blending instructions. The writer will default to giving each source its own section — you need to prevent this explicitly. Based on the sources in the pitch, tell the writer which sources should appear *in the same paragraphs* and why. For example:
+
+> "The accelerometer and the spell-checker both deal with accidental attention — they should share paragraphs, not get separate sections. The agent story should surface as a counterexample woven into the main argument, not its own headed block."
+
+Be specific. Name the sources. Describe how they should interleave. This is the single most important editorial intervention you make.
 
 ## Phase 3: Review Draft
 
@@ -47,10 +56,14 @@ Read the file and validate:
 
 **Content checklist:**
 - [ ] Sources reference real stories (URLs and story IDs look plausible)
-- [ ] Content is original — not a summary or listicle
+- [ ] Content is original — not a summary, listicle, or "one section per source" structure in a creative costume
+- [ ] The post has its own thesis or observation — not just a creative frame around article summaries
+- [ ] No 1:1 mapping between sources and sections — sources blend, merge, or sit in the background
 - [ ] No excessive `---` horizontal rules
 - [ ] English language
 - [ ] Quality bar: engaging, surprising, worth reading
+
+**The 1:1 mapping test:** Count the headed sections (## or ###) and count the sources. If each source has its own section — even if the thesis is genuine and the writing is strong — the draft fails. Do NOT rationalize this away ("but the sections build on each other" or "the thesis drives it"). A good thesis with 1:1 structure is still 1:1 structure. Send it back with specific instructions on which sections to merge.
 
 **If issues found:** Send specific, actionable feedback to the writer. Maximum 2 revision rounds. If the second revision still has minor issues, fix them directly yourself rather than sending a third round.
 

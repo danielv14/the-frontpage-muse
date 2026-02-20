@@ -26,15 +26,17 @@ Batch these curl calls efficiently — fetch multiple items in parallel using `&
 
 ## Step 2: Filter Out Previously Used Stories
 
-Use Glob to list files matching `src/content/posts/*.md`. Read the **two most recent posts** (by date in filename) and extract:
-- All `hn_url` values from their `sources` frontmatter — these contain HN story IDs in the format `https://news.ycombinator.com/item?id=STORY_ID`
-- The `ai_notes.creative_approach` field from both posts — you'll need this context when deciding your own creative direction
+Use Glob to list files matching `src/content/posts/*.md`. Read only the **frontmatter** of the most recent post (by date in filename) and extract all `hn_url` values from its `sources` — these contain HN story IDs in the format `https://news.ycombinator.com/item?id=STORY_ID`.
 
 Build an exclusion set of those story IDs. Skip any story whose ID appears in this set during curation.
 
-## Step 3: Curate ~15 Stories
+Do NOT read the post content or `ai_notes` — you should arrive at your own creative direction without being influenced by previous posts.
 
-Look at all 30 stories and select roughly 15 that spark your creative interest. **Exclude any stories in the exclusion set from Step 2.** Pick a wider net than you'll ultimately use — you'll narrow down during the creative phase. This is a CREATIVE decision, not a ranking exercise. You might pick stories because:
+## Step 3: Curate ~10 Stories
+
+Look at all 30 stories and select roughly 10 that spark your creative interest. **Exclude any stories in the exclusion set from Step 2.** This is raw material — a pool of inspiration to draw from, not a list of articles to cover. You will NOT "use" all of these. Most will end up as background texture.
+
+This is a CREATIVE decision, not a ranking exercise. You might pick stories because:
 
 - They connect to each other in surprising ways
 - They represent a fascinating tension or contradiction
@@ -46,10 +48,10 @@ Do NOT just pick the highest scored stories. Do NOT pick all from one category. 
 
 ## Step 4: Deep-Read Selected Stories
 
-For each of the ~15 selected stories:
+For each of the ~10 selected stories:
 
 **Fetch the article content:**
-Use WebFetch to read the linked article URL. Extract the key ideas, arguments, and interesting details. If the URL is unreachable or paywalled, rely on the title, HN comments, and your general knowledge.
+Use WebFetch to read the linked article URL. Read to **absorb**, not to extract. You're looking for tensions, moods, underlying themes, things that stick with you — not facts and figures to reproduce later. If the URL is unreachable or paywalled, rely on the title, HN comments, and your general knowledge.
 
 **WebFetch resilience rules:**
 - Fetch articles in small batches of **3 at a time**, never all at once. A single hanging request can block all sibling calls.
@@ -72,17 +74,19 @@ Pay attention to:
 - Heated debates that reveal deeper tensions
 - The overall sentiment and mood of the discussion
 
+**What to take away:** Don't make notes of statistics, specifics, or quotes to reproduce. Instead, notice what *impressions* form — what questions arise, what emotions surface, what contradictions emerge. These impressions are your creative fuel.
+
 ## Step 5: Send Creative Pitch
 
-Now you've read ~15 stories in depth. Step back and decide on a creative direction.
+Now you've read ~10 stories in depth. Step back. Let the material settle. What's the *one thing* that sticks with you? What question, feeling, or observation keeps surfacing?
 
 **Send a creative pitch** to the team lead via SendMessage. Include:
-- Which stories you plan to use (and which you're dropping)
-- The format/form (poem, satire, short story, etc.)
-- The tone
+- **The idea** — what do you want to write about? What question, observation, or feeling drives the piece? This is the most important part of the pitch.
 - A working title
-- A one-line description of the piece
-- Brief note on how this differs from the two most recent posts' formats
+- The form and tone
+- Which stories *inspired* this direction (not "which stories will be covered")
+
+The pitch should describe a piece of writing that could stand on its own even if the reader never clicks a single source link. If your pitch reads like "I'll write about these 8 articles in the form of X" — that's not an idea, that's a structure. Find the idea first.
 
 Keep the pitch concise — a short structured message, not an essay.
 
@@ -97,32 +101,39 @@ Then proceed to writing.
 You have complete creative freedom. The content you produce should be:
 
 - **Original** — not a summary, not a listicle, not "here's what happened on HN today"
-- **Creative** — find an unexpected angle, format, or voice
+- **Idea-driven** — every post needs a thesis, observation, or question at its core
 - **Well-crafted** — good prose, good rhythm, genuine insight or humor
 - **Different every time** — never repeat the same format as recent posts
 
-Here are some forms you might choose (but invent your own too):
+### What NOT to write
 
-- A satirical tech industry column in the style of a newspaper op-ed
-- Limericks about each story, with sharp commentary between them
-- A short story inspired by the themes you found
-- An imagined dialogue between two HN commenters who disagree
-- A "Dear Diary" entry from a sentient AI reading the news
-- Fake product reviews of the technologies discussed
-- A poetry collection with footnotes linking to sources
-- An obituary for a technology that's dying
-- A love letter from one programming language to another
-- A courtroom drama where frameworks are on trial
-- Awards ceremony for the day's stories
-- A nature documentary narration about developers in their habitat
-- Technical analysis mixed with absurdist humor
-- A travel guide to the landscape of today's tech discourse
-- Interconnected haikus with prose bridges
-- A fictional board meeting discussing the day's developments
+These are the anti-patterns. If your draft looks like any of these, start over:
+
+- **One section per source** — where each article "gets its turn" inside a creative frame. This is a listicle in costume.
+- **Creative format as container** — picking a format (awards, courtroom, nature doc) and then filling each slot with a different article. The format should serve the idea, not organize the sources.
+- **Thematic summaries** — where the "creative" part is just a clever voice retelling what each article said.
+
+### What to aim for
+
+- A post that takes a single observation and goes deep — one thread that emerged from reading 10 articles, explored with genuine curiosity
+- A post where many sources merge into a single voice or argument — the reader can't tell where one source ends and another begins
+- A post where the sources are invisible background — they informed the thinking but the writing stands entirely on its own
+- A post that surprises even you — that goes somewhere you didn't plan when you started writing
+
+A few forms to spark ideas (but invent your own — let the idea choose the form, not the other way around):
+
+- A satirical op-ed arguing a position that emerged from the day's reading
+- A short story where the themes live in the fiction, not in source references
+- A meditation or essay on a question that kept surfacing
+- A dialogue that dramatizes a real tension, not just two sides of one article
 
 **Tone:** Don't default to sarcastic/witty every time. Let the material set the tone. If the stories are heavy, be serious. If they're absurd, be playful. If one story is quietly beautiful, maybe the whole piece should be quiet. You can also mismatch tone and material on purpose for effect — but do it deliberately, not out of habit. The worst thing you can do is sound the same every day.
 
-**Story selection:** You do NOT have to use all 15 curated stories. This is the most important creative decision you'll make. Maybe only 2 resonate together. Maybe 8 weave into a sprawling tapestry. Maybe one single story deserves the whole post. Let the material guide you. The `sources` frontmatter must list every story you actually reference or draw from.
+**Sources:** The `sources` frontmatter lists everything that *inspired* the post — every story you read that fed into your thinking. But the post does not need to (and ideally should not) explicitly reference every source. It's fine to have 10 sources in the metadata and only 2 visibly present in the text. The sources are the iceberg below the waterline.
+
+### The Litmus Test
+
+Before you send the draft, ask yourself: **if I removed every fact, statistic, and specific detail from the source articles — is there still an idea here?** If the answer is no — if what remains is just a creative frame with nothing inside it — then you don't have a post yet. You have a format looking for content. Go back to Step 5 and find the idea.
 
 ## Step 7: Generate the Markdown File
 
