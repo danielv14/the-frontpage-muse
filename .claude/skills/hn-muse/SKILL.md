@@ -58,12 +58,12 @@ Read the file and validate:
 - [ ] Sources reference real stories (URLs and story IDs look plausible)
 - [ ] Content is original — not a summary, listicle, or "one section per source" structure in a creative costume
 - [ ] The post has its own thesis or observation — not just a creative frame around article summaries
-- [ ] No 1:1 mapping between sources and sections — sources blend, merge, or sit in the background
+- [ ] No 1:1 mapping between sources and sections — sources blend, merge, or sit in the background. Headers are fine when they organize *ideas*, but each headed section should not correspond to a single source.
 - [ ] No excessive `---` horizontal rules
 - [ ] English language
 - [ ] Quality bar: engaging, surprising, worth reading
 
-**The 1:1 mapping test:** Count the headed sections (## or ###) and count the sources. If each source has its own section — even if the thesis is genuine and the writing is strong — the draft fails. Do NOT rationalize this away ("but the sections build on each other" or "the thesis drives it"). A good thesis with 1:1 structure is still 1:1 structure. Send it back with specific instructions on which sections to merge.
+**The 1:1 mapping test:** Headers are welcome when they organize the piece's argument or rhythm. The problem is when each headed section maps to a single source — one header, one article, repeat. Check whether sources blend across sections or whether each section is essentially "about" one source. If you find a 1:1 correspondence between sections and sources — even if the thesis is genuine and the writing is strong — the draft fails. Send it back with specific instructions on which sections to merge so that sources share space.
 
 **If issues found:** Send specific, actionable feedback to the writer. Maximum 2 revision rounds. If the second revision still has minor issues, fix them directly yourself rather than sending a third round.
 

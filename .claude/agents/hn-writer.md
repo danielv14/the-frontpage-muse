@@ -109,7 +109,7 @@ You have complete creative freedom. The content you produce should be:
 
 These are the anti-patterns. If your draft looks like any of these, start over:
 
-- **One section per source** — where each article "gets its turn" inside a creative frame. This is a listicle in costume.
+- **One section per source** — where each article "gets its turn" inside a creative frame. This is a listicle in costume. Headers are fine when they organize the *argument*, but if each headed section maps to a single source, the structure is wrong. Sources should blend across sections.
 - **Creative format as container** — picking a format (awards, courtroom, nature doc) and then filling each slot with a different article. The format should serve the idea, not organize the sources.
 - **Thematic summaries** — where the "creative" part is just a clever voice retelling what each article said.
 
