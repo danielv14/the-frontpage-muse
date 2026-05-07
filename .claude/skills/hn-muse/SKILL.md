@@ -50,8 +50,9 @@ Read the file and validate:
 - [ ] `title` — creative and evocative
 - [ ] `description` — teaser, not summary
 - [ ] `date` — today's date
+- [ ] `format` — REQUIRED. Lowercase, hyphen-separated, 2–24 chars (e.g. `essay`, `story`, `field-guide`). Names the FORM, not the theme. The writer is encouraged to invent new format labels when nothing in the common list fits — but it must accurately describe the form, render well as a 1–2 word chip, and not be a synonym for an existing format. If you see something like `format: long-meditative-essay-on-presence`, push back: that's the description, not the format. The build fails if `format` is missing or breaks the schema.
 - [ ] `sources` — array with `title`, `url`, and `hn_url` for each source
-- [ ] `tags` — present (2-5 tags)
+- [ ] `tags` — present (2-5 tags) describing themes, NOT format
 - [ ] `ai_notes` with `story_selection` and `creative_approach` using `>-` syntax
 
 **Content checklist:**
