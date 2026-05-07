@@ -2,6 +2,7 @@
 title: "Surface Tension"
 description: "The cost of looking like something has never been lower. The cost of being it hasn't changed."
 date: 2026-03-15
+format: essay
 sources:
   - title: "The 100 hour gap between a vibecoded prototype and a working product"
     url: "https://kanfa.macbudkowski.com/vibecoding-cryptosaurus"

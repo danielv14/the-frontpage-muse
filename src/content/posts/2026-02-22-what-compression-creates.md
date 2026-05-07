@@ -2,6 +2,7 @@
 title: "What Compression Creates"
 description: "Everything today got smaller. Not everything that came out the other side was what went in."
 date: 2026-02-22
+format: essay
 sources:
   - title: "How Taalas \"prints\" LLM onto a chip?"
     url: "https://www.anuragk.com/blog/posts/Taalas.html"

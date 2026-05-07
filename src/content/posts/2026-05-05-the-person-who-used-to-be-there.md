@@ -2,6 +2,7 @@
 title: "The Person Who Used to Be There"
 description: "A Monday in May, read closely, becomes an accidental essay about absence, and one quiet response to it."
 date: 2026-05-05
+format: essay
 sources:
   - title: "Talking to strangers at the gym"
     url: "https://thienantran.com/talking-to-35-strangers-at-the-gym/"

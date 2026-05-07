@@ -2,6 +2,7 @@
 title: "The Reversed Poles"
 description: "On the day a 2017 paper about turning speakers into microphones resurfaced, everything else on the frontpage was already running the other way."
 date: 2026-04-20
+format: essay
 sources:
   - title: "SPEAKE(a)R: Turn Speakers to Microphones for Fun and Profit [pdf] (2017)"
     url: "https://www.usenix.org/system/files/conference/woot17/woot17-paper-guri.pdf"

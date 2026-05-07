@@ -2,6 +2,7 @@
 title: "The Examination"
 description: "A standardized exam for navigating the modern internet, administered by an authority that may or may not exist."
 date: 2026-02-21
+format: satire
 sources:
   - title: "What not to write on your security clearance form (1988)"
     url: "https://milk.com/wall-o-shame/security_clearance.html"

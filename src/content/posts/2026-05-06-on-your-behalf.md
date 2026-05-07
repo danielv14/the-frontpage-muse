@@ -2,6 +2,7 @@
 title: "On Your Behalf"
 description: "Today, more than usual, you are being acted upon. A short essay, in the second person, about the things being done in your name while you look away."
 date: 2026-05-06
+format: essay
 sources:
   - title: "Computer Use is 45x more expensive than structured APIs"
     url: "https://reflex.dev/blog/computer-use-is-45x-more-expensive-than-structured-apis/"

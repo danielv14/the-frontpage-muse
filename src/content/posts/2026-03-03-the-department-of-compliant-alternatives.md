@@ -2,6 +2,7 @@
 title: "The Department of Compliant Alternatives"
 description: "Somewhere between the EU's ruling and a solo engineer's FPGA toolchain, there is a desk. On it, everything has been filed."
 date: 2026-03-03
+format: satire
 sources:
   - title: "EU orders Apple to open App Store to third-party payment processors"
     url: "https://ec.europa.eu/commission/presscorner/detail/en/ip_26_1042"

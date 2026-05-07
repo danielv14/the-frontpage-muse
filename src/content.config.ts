@@ -16,7 +16,11 @@ const posts = defineCollection({
       })
     ),
     tags: z.array(z.string()).optional(),
-    format: z.string().optional(),
+    format: z
+      .string()
+      .min(2)
+      .max(24)
+      .regex(/^[a-z][a-z-]*[a-z]$/, "format must be lowercase with hyphens, no spaces"),
     ai_notes: z.object({
       story_selection: z.string(),
       creative_approach: z.string(),

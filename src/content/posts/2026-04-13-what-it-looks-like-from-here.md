@@ -2,6 +2,7 @@
 title: "What It Looks Like From Here"
 description: "On the quiet thrill of discovering that something is not what it appears to be."
 date: 2026-04-13
+format: essay
 sources:
   - title: "All elementary functions from a single binary operator"
     url: "https://arxiv.org/abs/2603.21852"

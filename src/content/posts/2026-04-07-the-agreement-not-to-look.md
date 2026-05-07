@@ -2,6 +2,7 @@
 title: "The Agreement Not to Look"
 description: "An essay on the quiet art of not noticing, and what fills the space when we look away."
 date: 2026-04-07
+format: essay
 sources:
   - title: "Book review: There Is No Antimemetics Division"
     url: "https://www.stephendiehl.com/posts/no_antimimetics/"

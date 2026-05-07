@@ -2,6 +2,7 @@
 title: "The Classifieds"
 description: "Today's Hacker News, as told through the want-ads of a newspaper that doesn't exist."
 date: 2026-02-24
+format: classifieds
 sources:
   - title: "Ladybird adopts Rust, with help from AI"
     url: "https://ladybird.org/posts/adopting-rust/"

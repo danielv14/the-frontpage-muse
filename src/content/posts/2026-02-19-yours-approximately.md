@@ -2,6 +2,7 @@
 title: "Yours Approximately"
 description: "Apologies from the labels, numbers, and color profiles that were supposed to describe you but never quite could."
 date: 2026-02-19
+format: letters
 sources:
   - title: "Sizing chaos"
     url: "https://pudding.cool/2026/02/womens-sizing/"

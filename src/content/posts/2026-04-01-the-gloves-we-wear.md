@@ -2,6 +2,7 @@
 title: "The Gloves We Wear"
 description: "On lab gloves, supply chains, and the quiet impossibility of a clean measurement."
 date: 2026-04-01
+format: essay
 sources:
   - title: "Ordinary Lab Gloves May Have Skewed Microplastic Data"
     url: "https://nautil.us/ordinary-lab-gloves-may-have-skewed-microplastic-data-1279386"

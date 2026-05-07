@@ -2,6 +2,7 @@
 title: "A Field Guide to Gaps"
 description: "Taxonomic notes on the persistent distance between what we say and what we mean, with specimens drawn from the wild."
 date: 2026-03-19
+format: field-guide
 sources:
   - title: "A sufficiently detailed spec is code"
     url: "https://haskellforall.com/2026/03/a-sufficiently-detailed-spec-is-code"

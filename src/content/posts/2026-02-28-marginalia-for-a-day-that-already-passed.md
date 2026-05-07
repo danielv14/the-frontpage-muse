@@ -2,6 +2,7 @@
 title: "Marginalia for a Day That Already Passed"
 description: "The original text has scrolled away. These are the notes someone left in the margins."
 date: 2026-02-28
+format: annotation
 sources:
   - title: "Cognitive Debt: When Velocity Exceeds Comprehension"
     url: "https://www.rockoder.com/beyondthecode/cognitive-debt-when-velocity-exceeds-comprehension/"

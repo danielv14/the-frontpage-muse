@@ -2,6 +2,7 @@
 title: "Q2 2026 Investor Letter: On the Reliable Underperformance of Reality"
 description: "In which we outline our continued confidence in the thesis that nothing is what it claims to be."
 date: 2026-04-14
+format: satire
 sources:
   - title: "Nothing Ever Happens: Polymarket bot that always buys No on non-sports markets"
     url: "https://github.com/sterlingcrispin/nothing-ever-happens"

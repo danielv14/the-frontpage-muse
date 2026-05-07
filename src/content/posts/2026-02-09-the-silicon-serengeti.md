@@ -2,6 +2,7 @@
 title: "The Silicon Serengeti"
 description: "A nature documentary narration about the strange creatures, fragile ecosystems, and dramatic power struggles of the technology world — as observed on this Sunday's Hacker News frontpage."
 date: 2026-02-09
+format: satire
 sources:
   - title: "Claude's C Compiler vs. GCC"
     url: "https://harshanu.space/en/tech/ccc-vs-gcc/"

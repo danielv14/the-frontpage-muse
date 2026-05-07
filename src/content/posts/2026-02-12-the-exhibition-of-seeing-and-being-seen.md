@@ -2,6 +2,7 @@
 title: "The Exhibition of Seeing and Being Seen"
 description: "A guided tour through a fictional museum where every room asks the same question: who is watching, and what do they think they see?"
 date: 2026-02-12
+format: catalog
 sources:
   - title: "Amazon Ring's lost dog ad sparks backlash amid fears of mass surveillance"
     url: "https://www.theverge.com/tech/876866/ring-search-party-super-bowl-ad-online-backlash"

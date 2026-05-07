@@ -2,6 +2,7 @@
 title: "Never Talk About Goblins"
 description: "A field guide to the small creatures we trained without meaning to, and the ones we are still learning to name."
 date: 2026-04-30
+format: essay
 sources:
   - title: "Where the goblins came from"
     url: "https://openai.com/index/where-the-goblins-came-from/"

@@ -2,6 +2,7 @@
 title: "Letters Never Sent"
 description: "Correspondence between protocols, programs, numbers, and machines that never learned to talk to each other."
 date: 2026-02-11
+format: letters
 sources:
   - title: "The Day the Telnet Died"
     url: "https://www.labs.greynoise.io/grimoire/2026-02-10-telnet-falls-silent/"

@@ -2,6 +2,7 @@
 title: "The Obituaries"
 description: "Today's deaths, departures, and one stubborn birth — dispatches from the back page of the internet."
 date: 2026-02-10
+format: obituary
 sources:
   - title: "Discord will require a face scan or ID for full access next month"
     url: "https://www.theverge.com/tech/875309/discord-age-verification-global-roll-out"

@@ -2,6 +2,7 @@
 title: "The Letter"
 description: "A Florida judge, a closed coal plant, and a flash drive walk into a courtroom nobody noticed was in session."
 date: 2026-03-10
+format: essay
 sources:
   - title: "Florida judge rules red light camera tickets are unconstitutional"
     url: "https://cbs12.com/news/local/florida-news-judge-rules-red-light-camera-tickets-unconstitutional"

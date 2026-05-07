@@ -2,6 +2,7 @@
 title: "The Acceleration and the Friction"
 description: "In which two superintelligences are born on the same afternoon, an AI publishes a hit piece, and a window on macOS refuses, once again, to resize."
 date: 2026-02-13
+format: essay
 sources:
   - title: "Gemini 3 Deep Think"
     url: "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-deep-think/"

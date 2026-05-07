@@ -2,6 +2,7 @@
 title: "Nothing Conceals the Moon"
 description: "A Japanese poet burns down his storehouse. Denmark burns down Microsoft. The rest of us check for moonlight."
 date: 2026-02-25
+format: essay
 sources:
   - title: "Japanese Death Poems"
     url: "https://www.masterpiece-of-japanese-culture.com/literatures-and-poems/japanese-death-poems-by-famous-people"

@@ -2,6 +2,7 @@
 title: "The Thickness of the Present Moment"
 description: "Your sleep tracker scored last night. Your language model answered in milliseconds. Somewhere between those intervals, a day happened."
 date: 2026-03-02
+format: essay
 sources:
   - title: "Oura Ring 4 Review: 6 Months Later"
     url: "https://quantifiedself.blog/oura-ring-4-six-months"

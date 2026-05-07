@@ -2,6 +2,7 @@
 title: "Why We Write"
 description: "Four motives a writer named in 1946, and a fifth that arrived on the frontpage the same day he did."
 date: 2026-04-24
+format: essay
 sources:
   - title: "Why I Write (1946)"
     url: "https://www.orwellfoundation.com/the-orwell-foundation/orwell/essays-and-other-works/why-i-write/"

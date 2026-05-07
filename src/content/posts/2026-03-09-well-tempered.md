@@ -2,6 +2,7 @@
 title: "Well-Tempered"
 description: "You can have any key you want. You just can't have any of them right."
 date: 2026-03-09
+format: essay
 sources:
   - title: "Why can't you tune your guitar? (2019)"
     url: "https://www.ethanhein.com/wp/2019/why-cant-you-tune-your-guitar/"

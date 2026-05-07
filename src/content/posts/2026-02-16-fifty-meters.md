@@ -2,6 +2,7 @@
 title: "Fifty Meters"
 description: "On the distance between what looks right and what is right, measured in car washes, fabricated quotes, stolen voices, and five hundred lines of C."
 date: 2026-02-16
+format: essay
 sources:
   - title: "I want to wash my car. The car wash is 50 meters away. Should I walk or drive?"
     url: "https://mastodon.world/@knowmadd/116072773118828295"

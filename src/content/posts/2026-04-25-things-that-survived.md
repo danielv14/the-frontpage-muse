@@ -2,6 +2,7 @@
 title: "Things That Survived"
 description: "A short, incomplete catalog from this week's frontpage."
 date: 2026-04-25
+format: essay
 sources:
   - title: "Iliad fragment found in Roman-era mummy"
     url: "https://www.thehistoryblog.com/archives/75877"
