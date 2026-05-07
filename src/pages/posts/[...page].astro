@@ -1,41 +1,160 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PostCard from "../../components/PostCard.astro";
-import Pagination from "../../components/Pagination.astro";
 import { getCollection } from "astro:content";
 import { calculateReadingTime } from "../../utils/readingTime";
+import { displayFormat } from "../../utils/format";
 
-export const getStaticPaths = async ({ paginate }: { paginate: Function }) => {
-  const allPosts = await getCollection("posts");
-  const sortedPosts = allPosts.sort(
-    (a, b) => b.data.date.getTime() - a.data.date.getTime()
-  );
-  return paginate(sortedPosts, { pageSize: 10 });
+export const getStaticPaths = async () => {
+  return [{ params: { page: undefined } }];
 };
 
-const { page } = Astro.props;
+const allPosts = await getCollection("posts");
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+interface PostEntry {
+  id: string;
+  title: string;
+  date: Date;
+  format: string;
+  readingTime: number;
+}
+
+const monthGroups: Array<{ key: string; label: string; posts: PostEntry[] }> = [];
+const groupMap = new Map<string, { label: string; posts: PostEntry[] }>();
+
+for (const post of sortedPosts) {
+  const d = post.data.date;
+  const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  const label = d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  if (!groupMap.has(key)) {
+    const entry = { label, posts: [] as PostEntry[] };
+    groupMap.set(key, entry);
+    monthGroups.push({ key, label, posts: entry.posts });
+  }
+  groupMap.get(key)!.posts.push({
+    id: post.id,
+    title: post.data.title,
+    date: post.data.date,
+    format: displayFormat(post.data.format),
+    readingTime: calculateReadingTime(post.body ?? ""),
+  });
+}
+
+const total = sortedPosts.length;
+const firstDate = sortedPosts[sortedPosts.length - 1]?.data.date;
+const latestDate = sortedPosts[0]?.data.date;
+const formatRange = (d: Date | undefined) =>
+  d ? d.toLocaleDateString("en-US", { month: "short", year: "numeric" }).toUpperCase() : "";
 ---
 
-<BaseLayout title="All Dispatches" description="Browse all dispatches from The Frontpage Muse.">
+<BaseLayout title="Archive" description="The complete index of dispatches from The Frontpage Muse.">
   <section class="animate-fade-in-up">
-    <h1 class="font-display text-3xl sm:text-4xl font-bold text-ink mb-1">All Dispatches</h1>
-    <p class="text-sm font-mono text-ink-faint mb-6">
-      {page.total} {page.total === 1 ? "post" : "posts"} and counting
+    <!-- Archive masthead -->
+    <h1 class="font-display font-bold text-ink leading-[1.05] tracking-tight"
+        style="font-size: clamp(2.5rem, 6vw, 4rem);">
+      Archive
+    </h1>
+    <p class="mt-4 font-display italic text-xl text-ink-muted max-w-2xl leading-snug">
+      Every dispatch ever filed, in reverse chronological order. {total} entries running from {formatRange(firstDate)} to {formatRange(latestDate)}.
     </p>
-    <div class="border-t border-rule">
-      {page.data.map((post: any) => (
-        <PostCard
-          title={post.data.title}
-          description={post.data.description}
-          date={post.data.date}
-          slug={post.id}
-          readingTime={calculateReadingTime(post.body ?? "")}
-        />
+
+    <!-- Month groups -->
+    <div class="mt-12 space-y-12">
+      {monthGroups.map((group) => (
+        <section>
+          <header class="flex items-baseline justify-between gap-4 mb-4">
+            <h2 class="font-display italic text-2xl sm:text-[1.75rem] text-ink font-normal">
+              {group.label}
+            </h2>
+            <span class="font-mono text-[0.625rem] tracking-[0.22em] uppercase text-ink-faint shrink-0">
+              {group.posts.length} {group.posts.length === 1 ? "entry" : "entries"}
+            </span>
+          </header>
+          <ol class="toc-list border-t border-rule">
+            {group.posts.map((post) => (
+              <li class="toc-row">
+                <a href={`/posts/${post.id}`} class="toc-link">
+                  <span class="toc-day">
+                    {String(post.date.getDate()).padStart(2, "0")}
+                  </span>
+                  <span class="toc-title">{post.title}</span>
+                  <span class="toc-format">{post.format}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
       ))}
     </div>
-    <Pagination
-      currentPage={page.currentPage}
-      lastPage={page.lastPage}
-    />
   </section>
 </BaseLayout>
+
+<style>
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toc-row {
+    border-bottom: 1px solid var(--color-rule-light);
+  }
+
+  .toc-link {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr auto;
+    align-items: baseline;
+    gap: 0.875rem;
+    padding: 0.75rem 0;
+    text-decoration: none;
+    color: var(--color-ink);
+    transition: color 0.2s ease;
+    position: relative;
+  }
+
+  .toc-link:hover {
+    color: var(--color-accent);
+  }
+
+  .toc-link:hover .toc-day {
+    color: var(--color-accent);
+  }
+
+  .toc-link:hover .toc-format {
+    color: var(--color-accent);
+  }
+
+  .toc-day {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.08em;
+    transition: color 0.2s ease;
+  }
+
+  .toc-title {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+  }
+
+  .toc-leader {
+    display: none;
+  }
+
+  .toc-format {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    transition: color 0.2s ease;
+    text-align: right;
+  }
+</style>

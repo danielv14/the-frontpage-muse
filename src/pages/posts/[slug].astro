@@ -2,18 +2,25 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection, render } from "astro:content";
 import { calculateReadingTime } from "../../utils/readingTime";
+import { displayFormat } from "../../utils/format";
+import { issueNumberFor } from "../../utils/issueNumber";
 
 export const getStaticPaths = async () => {
   const posts = await getCollection("posts");
   return posts.map((post) => ({
     params: { slug: post.id },
-    props: { post },
+    props: { post, allPosts: posts },
   }));
 };
 
-const { post } = Astro.props;
+const { post, allPosts } = Astro.props;
 const { Content } = await render(post);
 const readingTime = calculateReadingTime(post.body ?? "");
+const format = displayFormat(post.data.format);
+const issueNum = issueNumberFor(
+  post.data.date,
+  allPosts.map((p: any) => p.data.date),
+);
 
 const formatDate = (d: Date): string => {
   return d.toLocaleDateString("en-US", {
@@ -22,6 +29,9 @@ const formatDate = (d: Date): string => {
     day: "numeric",
   });
 };
+
+const dayName = post.data.date.toLocaleDateString("en-US", { weekday: "long" }).toUpperCase();
+const fullDate = formatDate(post.data.date).toUpperCase();
 ---
 
 <BaseLayout
@@ -33,41 +43,49 @@ const formatDate = (d: Date): string => {
 >
   <article class="animate-fade-in-up">
     <!-- Post header -->
-    <header class="mb-8">
-      <div class="flex items-center gap-3">
-        <time class="text-xs font-mono text-ink-faint uppercase tracking-widest">
-          {formatDate(post.data.date)}
-        </time>
-        <span class="text-xs font-mono text-ink-faint">&middot;</span>
-        <span class="text-xs font-mono text-ink-faint">{readingTime} min read</span>
+    <header class="mb-10">
+      <!-- Issue line -->
+      <div class="issue-line">
+        <span>ISSUE No. {issueNum}</span>
+        <span class="issue-sep">·</span>
+        <span>{dayName}</span>
+        <span class="issue-sep">·</span>
+        <span>{fullDate}</span>
+        <span class="issue-sep">·</span>
+        <span>{readingTime} MIN</span>
       </div>
-      <h1 class="font-display text-3xl sm:text-4xl font-bold text-ink mt-3 leading-tight">
+
+      <!-- Format chip -->
+      <div class="kicker mt-6">{format}</div>
+
+      <!-- Title -->
+      <h1 class="font-display font-bold text-ink leading-[1.05] tracking-tight mt-3"
+          style="font-size: clamp(2rem, 5vw, 3.25rem);">
         {post.data.title}
       </h1>
-      <p class="mt-3 text-xl font-body text-ink-muted italic leading-relaxed">
+
+      <!-- Dek / standfirst -->
+      <p class="mt-5 font-display italic text-xl sm:text-2xl text-ink-muted leading-snug max-w-2xl font-normal">
         {post.data.description}
       </p>
+
+      <!-- Behind-the-curtain marginalia -->
       {post.data.ai_notes && (
-        <details class="mt-4">
-          <summary class="text-sm font-mono text-ink-faint cursor-pointer hover:text-accent transition-colors select-none">
+        <details class="mt-6 group/curtain">
+          <summary class="curtain-summary">
             Behind the curtain
+            <span class="curtain-arrow">+</span>
           </summary>
-          <div class="mt-3 space-y-3 text-lg font-body text-ink-muted">
-            <div>
-              <h3 class="font-mono text-base text-ink-faint uppercase tracking-wide mb-1">Story selection</h3>
-              <p class="leading-relaxed">{post.data.ai_notes.story_selection}</p>
-            </div>
-            <div>
-              <h3 class="font-mono text-base text-ink-faint uppercase tracking-wide mb-1">Creative approach</h3>
-              <p class="leading-relaxed">{post.data.ai_notes.creative_approach}</p>
-            </div>
-            <p class="text-base text-ink-faint italic mt-4">
-              This is the AI's reasoning behind the selection of articles and why this particular post was written.
-            </p>
+          <div class="mt-4 space-y-3 text-base font-body italic text-ink-muted leading-relaxed max-w-2xl">
+            <p>{post.data.ai_notes.story_selection}</p>
+            <p>{post.data.ai_notes.creative_approach}</p>
           </div>
         </details>
       )}
-      <div class="mt-6 border-t border-rule"></div>
+
+      <div class="ornament mt-10">
+        <span class="ornament-glyph">§</span>
+      </div>
     </header>
 
     <!-- Post content -->
@@ -77,27 +95,30 @@ const formatDate = (d: Date): string => {
 
     <!-- Sources -->
     {post.data.sources && post.data.sources.length > 0 && (
-      <footer class="mt-12 pt-8 border-t border-rule">
-        <h2 class="font-display text-xl font-bold text-ink mb-4">Sources</h2>
-        <ul class="space-y-3">
+      <footer class="mt-14">
+        <div class="ornament">
+          <span class="ornament-glyph">❦</span>
+        </div>
+        <h2 class="font-display italic text-xl text-ink-muted font-normal mb-3">Sources</h2>
+        <ul class="space-y-2.5">
           {post.data.sources.map((source: { title: string; url: string; hn_url: string }) => (
-            <li class="text-sm font-body">
+            <li class="text-base font-body leading-snug">
               <a
                 href={source.url}
-                class="text-accent hover:text-accent-warm underline underline-offset-2 transition-colors"
+                class="link-draw !text-accent"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 {source.title}
               </a>
-              <span class="text-ink-faint mx-2">&middot;</span>
+              <span class="text-rule mx-2">·</span>
               <a
                 href={source.hn_url}
-                class="text-ink-faint hover:text-accent font-mono text-xs transition-colors"
+                class="text-ink-faint hover:text-accent font-mono text-[0.6875rem] tracking-[0.15em] uppercase transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                HN discussion
+                HN thread
               </a>
             </li>
           ))}
@@ -106,13 +127,48 @@ const formatDate = (d: Date): string => {
     )}
 
     <!-- Back link -->
-    <div class="mt-10 pt-6 border-t border-rule">
+    <div class="mt-12 pt-6 border-t border-rule">
       <a
         href="/"
-        class="text-sm font-mono text-ink-muted hover:text-accent transition-colors"
+        class="inline-flex items-center gap-2 font-mono text-[0.6875rem] tracking-[0.2em] uppercase text-ink-muted hover:text-accent transition-colors"
       >
-        &larr; Back to all dispatches
+        <span class="back-arrow inline-block transition-transform">←</span>
+        Back to the front page
       </a>
     </div>
   </article>
 </BaseLayout>
+
+<style>
+  .curtain-summary {
+    cursor: pointer;
+    list-style: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--color-ink-faint);
+    transition: color 0.2s ease;
+    user-select: none;
+  }
+  .curtain-summary::-webkit-details-marker {
+    display: none;
+  }
+  .curtain-summary:hover {
+    color: var(--color-ink-muted);
+  }
+  .curtain-arrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    transition: transform 0.2s ease;
+    display: inline-block;
+  }
+  details[open] .curtain-arrow {
+    transform: rotate(45deg);
+  }
+  a:hover .back-arrow {
+    transform: translateX(-4px);
+  }
+</style>

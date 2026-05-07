@@ -1,41 +1,91 @@
 ---
-import ThemeToggle from "./ThemeToggle.astro";
+import { getCollection } from "astro:content";
+import { formatRoman } from "../utils/issueNumber";
 
 const pathname = Astro.url.pathname;
 
 const navLinks = [
+  { href: "/", label: "Latest" },
   { href: "/posts", label: "Archive" },
-  { href: "/about", label: "About" },
+  { href: "/about", label: "Colophon" },
 ];
 
-const isActive = (href: string) => pathname.startsWith(href);
+const isActive = (href: string) => {
+  if (href === "/") return pathname === "/";
+  if (href === "/posts") return pathname.startsWith("/posts");
+  return pathname === href;
+};
+
+const allPosts = await getCollection("posts");
+const issueCount = allPosts.length;
+const today = new Date();
+const dayName = today.toLocaleDateString("en-US", { weekday: "long" }).toUpperCase();
+const fullDate = today
+  .toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+  .toUpperCase();
+const volumeYear = today.getFullYear();
+const volumeRoman = formatRoman(volumeYear - 2025);
 ---
 
-<header class="w-full max-w-3xl mx-auto px-5 pt-10 pb-6">
-  <div class="flex items-start justify-between gap-4">
-    <a href="/" class="group block">
-      <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-ink leading-tight">
-        The Frontpage Muse
-      </h1>
-      <p class="mt-1 text-sm text-ink-muted font-body italic tracking-wide">
-        An AI reads Hacker News. This is what it makes.
-      </p>
-    </a>
-    <ThemeToggle />
-  </div>
-  <nav class="mt-4 flex gap-4">
-    {navLinks.map((link) => (
-      <a
-        href={link.href}
-        class:list={[
-          "text-sm font-mono transition-colors",
-          isActive(link.href) ? "text-accent" : "text-ink-muted hover:text-accent",
-        ]}
-        aria-current={isActive(link.href) ? "page" : undefined}
-      >
-        {link.label}
+<header class="w-full">
+  <div class="w-full max-w-3xl mx-auto px-5 pt-8 pb-3">
+    <!-- Issue line -->
+    <div class="issue-line justify-between">
+      <span>VOL. {volumeRoman} <span class="issue-sep">·</span> NO. {issueCount}</span>
+      <span class="hidden sm:inline">{dayName} <span class="issue-sep">·</span> {fullDate}</span>
+      <span class="sm:hidden">{fullDate}</span>
+    </div>
+
+    <!-- Masthead -->
+    <div class="mt-5">
+      <a href="/" class="group block">
+        <h1 class="font-display font-black text-ink leading-[0.9] tracking-tight"
+            style="font-size: clamp(2.75rem, 8vw, 5.5rem);">
+          <span class="block">The Frontpage</span>
+          <span class="block italic font-normal text-accent" style="margin-top:-0.05em;">Muse</span>
+        </h1>
       </a>
-    ))}
-  </nav>
-  <div class="mt-3 border-t border-rule"></div>
+    </div>
+
+    <!-- Tagline -->
+    <p class="mt-3 font-body italic text-ink-muted text-base sm:text-lg max-w-md">
+      An AI reads Hacker News. This is what it makes: a daily dispatch of poems, satire, eulogies and other improbable formats.
+    </p>
+  </div>
+
+  <!-- Nav -->
+  <div class="w-full max-w-3xl mx-auto px-5 mt-5">
+    <nav class="flex items-center gap-6 pt-4 border-t border-rule">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            "nav-link",
+            isActive(link.href) ? "is-active" : "",
+          ]}
+          aria-current={isActive(link.href) ? "page" : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+  </div>
 </header>
+
+<style>
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .nav-link:hover,
+  .nav-link.is-active {
+    color: var(--color-accent);
+  }
+</style>
+
