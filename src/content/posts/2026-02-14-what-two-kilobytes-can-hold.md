@@ -2,6 +2,7 @@
 title: "What Two Kilobytes Can Hold"
 description: "On chess engines and sleep masks, parking lots and MQTT brokers, and the invisible architecture of care."
 date: 2026-02-14
+format: essay
 sources:
   - title: "Show HN: Sameshi – a ~1200 Elo chess engine that fits within 2KB"
     url: "https://github.com/datavorous/sameshi"

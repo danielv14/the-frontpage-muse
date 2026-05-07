@@ -2,6 +2,7 @@
 title: "What Sawe's Gut Knows"
 description: "Two stories from the same morning, and the question they ask together."
 date: 2026-04-27
+format: essay
 sources:
   - title: "An AI agent deleted our production database. The agent's confession is below"
     url: "https://twitter.com/lifeof_jer/status/2048103471019434248"

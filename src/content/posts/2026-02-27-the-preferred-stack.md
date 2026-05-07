@@ -2,6 +2,7 @@
 title: "The Preferred Stack"
 description: "Release notes for a tool that has been making some decisions on your behalf."
 date: 2026-02-27
+format: satire
 sources:
   - title: "What Claude Code chooses"
     url: "https://amplifying.ai/research/claude-code-picks"

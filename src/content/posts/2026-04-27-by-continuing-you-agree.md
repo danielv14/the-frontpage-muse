@@ -2,6 +2,7 @@
 title: "By Continuing, You Agree"
 description: "An end user license agreement for the things we are quietly granting away."
 date: 2026-04-27
+format: satire
 sources:
   - title: "Men who stare at walls"
     url: "https://www.alexselimov.com/posts/men_who_stare_at_walls/"

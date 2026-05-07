@@ -2,6 +2,7 @@
 title: "No Hand Held Out"
 description: "On a day of handoffs, the gesture that kept not happening."
 date: 2026-04-21
+format: essay
 sources:
   - title: "John Ternus to become Apple CEO"
     url: "https://www.apple.com/newsroom/2026/04/tim-cook-to-become-apple-executive-chairman-john-ternus-to-become-apple-ceo/"

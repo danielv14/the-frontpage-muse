@@ -2,6 +2,7 @@
 title: "Maintenance Notes for Unsolicited Projects"
 description: "Selected entries from a logbook nobody asked anyone to keep."
 date: 2026-04-08
+format: field-notes
 sources:
   - title: "A truck driver spent 20 years making a scale model of every building in NYC"
     url: "https://www.smithsonianmag.com/smart-news/a-truck-drive-spent-20-years-making-this-astonishing-scale-model-of-every-single-building-in-new-york-city-180988443/"

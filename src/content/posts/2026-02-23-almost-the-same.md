@@ -2,6 +2,7 @@
 title: "Almost the Same"
 description: "Someone on Hacker News asked about cloning a cat. Everything else today was doing it too."
 date: 2026-02-23
+format: essay
 sources:
   - title: "Ask HN: Have you ever cloned a cat?"
     url: "https://news.ycombinator.com/item?id=47118774"

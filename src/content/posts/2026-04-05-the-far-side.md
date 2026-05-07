@@ -2,6 +2,7 @@
 title: "The Far Side: Selected Artifacts from the Age of Convenient Unknowing"
 description: "A temporary exhibition catalog for objects we built, lost, and deliberately forgot."
 date: 2026-04-05
+format: catalog
 sources:
   - title: "The threat is comfortable drift toward not understanding what you're doing"
     url: "https://ergosphere.blog/posts/the-machines-are-fine/"

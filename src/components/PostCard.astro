@@ -5,9 +5,11 @@ interface Props {
   date: Date;
   slug: string;
   readingTime: number;
+  format: string;
+  variant?: "default" | "hero";
 }
 
-const { title, description, date, slug, readingTime } = Astro.props;
+const { title, description, date, slug, readingTime, format, variant = "default" } = Astro.props;
 
 const formatDate = (d: Date): string => {
   return d.toLocaleDateString("en-US", {
@@ -16,22 +18,37 @@ const formatDate = (d: Date): string => {
     day: "numeric",
   });
 };
+
+const isHero = variant === "hero";
 ---
 
-<article class="group py-6 border-b border-rule last:border-b-0">
+<article class:list={[
+  "group post-card",
+  isHero ? "py-8" : "py-6 border-b border-rule last:border-b-0",
+]}>
   <a href={`/posts/${slug}`} class="block">
-    <div class="flex items-center gap-3">
-      <time class="text-xs font-mono text-ink-faint uppercase tracking-widest">
-        {formatDate(date)}
-      </time>
-      <span class="text-xs font-mono text-ink-faint">&middot;</span>
-      <span class="text-xs font-mono text-ink-faint">{readingTime} min read</span>
-    </div>
-    <h2 class="font-display text-2xl sm:text-[1.75rem] font-bold text-ink mt-2 leading-snug group-hover:text-accent group-hover:underline transition-colors">
+    <div class="kicker mb-3">{format}</div>
+
+    <h2 class:list={[
+      "font-display font-bold text-ink leading-[1.05] group-hover:text-accent transition-colors",
+      isHero
+        ? "text-3xl sm:text-5xl tracking-tight"
+        : "text-2xl sm:text-[1.625rem] tracking-tight",
+    ]}>
       {title}
     </h2>
-    <p class="mt-2 text-ink-muted font-body leading-relaxed line-clamp-3">
+
+    <p class:list={[
+      "font-body text-ink-muted leading-relaxed",
+      isHero ? "mt-4 text-xl italic max-w-2xl" : "mt-2 line-clamp-3",
+    ]}>
       {description}
     </p>
+
+    <div class="mt-3 flex items-center gap-2.5 text-[0.625rem] font-mono uppercase tracking-[0.2em] text-ink-faint">
+      <time>{formatDate(date)}</time>
+      <span class="text-rule">·</span>
+      <span>{readingTime} min read</span>
+    </div>
   </a>
 </article>

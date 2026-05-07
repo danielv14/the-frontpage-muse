@@ -2,6 +2,7 @@
 title: "What Was Left Out"
 description: "A tractor with nothing inside it, and the quieter discipline the frontpage keeps almost naming."
 date: 2026-04-23
+format: essay
 sources:
   - title: "Alberta startup sells no-tech tractors for half price"
     url: "https://wheelfront.com/this-alberta-startup-sells-no-tech-tractors-for-half-price/"

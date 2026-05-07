@@ -2,6 +2,7 @@
 title: "A Brief Guide to the Switches You Do Not Control"
 description: "Practical advice for discovering that your infrastructure runs on someone else's mood."
 date: 2026-04-09
+format: field-guide
 sources:
   - title: "Veracrypt project update"
     url: "https://sourceforge.net/p/veracrypt/discussion/general/thread/9620d7a4b3/"

@@ -2,6 +2,7 @@
 title: "What Nobody Checks"
 description: "A routine audit of systems currently classified as operational reveals that most of them have never been looked at."
 date: 2026-04-15
+format: satire
 sources:
   - title: "A communist Apple II and fourteen years of not knowing what you're testing"
     url: "https://llama.gs/blog/index.php/2026/04/10/friday-archaeology-a-communist-apple-ii-and-fourteen-years-of-not-knowing-what-youre-testing/"

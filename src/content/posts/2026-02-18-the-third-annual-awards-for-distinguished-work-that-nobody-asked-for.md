@@ -2,6 +2,7 @@
 title: "The Third Annual Awards for Distinguished Work That Nobody Asked For"
 description: "A report from the gala where the unsanctioned, the unrequested, and the stubbornly built receive their due."
 date: 2026-02-18
+format: satire
 sources:
   - title: "Show HN: AsteroidOS 2.0 – Nobody asked, we shipped anyway"
     url: "https://asteroidos.org/news/2-0-release/index.html"

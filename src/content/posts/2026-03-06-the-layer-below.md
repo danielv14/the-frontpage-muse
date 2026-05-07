@@ -2,6 +2,7 @@
 title: "The Layer Below"
 description: "You forgot the ground was moving. Now look down."
 date: 2026-03-06
+format: essay
 sources:
   - title: "10% of Firefox crashes are caused by bitflips"
     url: "https://mas.to/@gabrielesvelto/116171750653898304"

@@ -2,6 +2,7 @@
 title: "Callbacks"
 description: "A play in one act. The auditions are open. The criteria are not."
 date: 2026-03-08
+format: drama
 sources:
   - title: "LLM Writing Tropes.md"
     url: "https://tropes.fyi/tropes-md"

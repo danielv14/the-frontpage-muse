@@ -2,6 +2,7 @@
 title: "Multiplication Is Easier Than Addition"
 description: "Field notes from terrain that recently inverted. The surveyor is taking this well, considering."
 date: 2026-03-04
+format: field-guide
 sources:
   - title: "nCPU: A Neural Processor Where Multiplication Is Faster Than Addition"
     url: "https://github.com/petermattia/ncpu"

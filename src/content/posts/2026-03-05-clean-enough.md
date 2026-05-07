@@ -2,6 +2,7 @@
 title: "Clean Enough"
 description: "Run anything through the right machine and it comes out unrecognizable. This has always been the point."
 date: 2026-03-05
+format: essay
 sources:
   - title: "Relicensing with AI-Assisted Rewrite"
     url: "https://tuananh.net/2026/03/05/relicensing-with-ai-assisted-rewrite/"

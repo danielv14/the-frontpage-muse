@@ -2,6 +2,7 @@
 title: "Terms and Conditions"
 description: "On promises that assume a world that no longer exists by the time they come due."
 date: 2026-04-16
+format: essay
 sources:
   - title: "Google broke its promise to me – now ICE has my data"
     url: "https://www.eff.org/deeplinks/2026/04/google-broke-its-promise-me-now-ice-has-my-data"

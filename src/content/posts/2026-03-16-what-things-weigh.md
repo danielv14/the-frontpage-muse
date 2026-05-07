@@ -2,6 +2,7 @@
 title: "What Things Weigh"
 description: "Official findings from the Bureau of Apparent and Actual Mass. Several items have been flagged."
 date: 2026-03-16
+format: satire
 sources:
   - title: "The 49MB web page"
     url: "https://thatshubham.com/blog/news-audit"

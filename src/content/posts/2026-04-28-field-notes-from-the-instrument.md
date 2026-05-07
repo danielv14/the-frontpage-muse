@@ -2,6 +2,7 @@
 title: "Field Notes from the Instrument"
 description: "A logbook of moments where hidden state stopped being hidden."
 date: 2026-04-28
+format: field-notes
 sources:
   - title: "FDA approves first gene therapy for treatment of genetic hearing loss"
     url: "https://www.fda.gov/news-events/press-announcements/fda-approves-first-ever-gene-therapy-treatment-genetic-hearing-loss-under-national-priority-voucher"

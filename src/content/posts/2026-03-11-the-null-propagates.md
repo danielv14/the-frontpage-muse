@@ -2,6 +2,7 @@
 title: "The Null Propagates"
 description: "An incident report for a production bug filed in 1965, still open, scope expanding."
 date: 2026-03-11
+format: satire
 sources:
   - title: "Tony Hoare has died"
     url: "https://blog.computationalcomplexity.org/2026/03/tony-hoare-1934-2026.html"

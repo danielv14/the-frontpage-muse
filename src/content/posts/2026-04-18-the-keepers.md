@@ -2,6 +2,7 @@
 title: "The Keepers"
 description: "Field notes from people keeping ledgers nobody asked them to keep, and the quiet argument that noticing is labor."
 date: 2026-04-18
+format: essay
 sources:
   - title: "All 12 moonwalkers had \"lunar hay fever\" from dust smelling like gunpowder (2018)"
     url: "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/The_toxic_side_of_the_Moon"

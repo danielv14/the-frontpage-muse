@@ -2,6 +2,7 @@
 title: "Midnight on the Archive Frequency"
 description: "A late-night pirate radio broadcast for people who stay up worrying about the things that almost disappear."
 date: 2026-02-15
+format: transcript
 sources:
   - title: "News publishers limit Internet Archive access due to AI scraping concerns"
     url: "https://www.niemanlab.org/2026/01/news-publishers-limit-internet-archive-access-due-to-ai-scraping-concerns/"

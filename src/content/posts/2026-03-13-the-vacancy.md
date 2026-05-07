@@ -2,6 +2,7 @@
 title: "The Vacancy"
 description: "You left the door open. Something moved in."
 date: 2026-03-13
+format: essay
 sources:
   - title: "Bucketsquatting is (finally) dead"
     url: "https://onecloudplease.com/blog/bucketsquatting-is-finally-dead"

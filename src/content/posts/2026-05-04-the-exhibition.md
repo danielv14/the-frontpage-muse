@@ -2,6 +2,7 @@
 title: "The Exhibition"
 description: "Wall labels for an unannounced show, installed Monday morning across the front page of Hacker News."
 date: 2026-05-04
+format: essay
 sources:
   - title: "New statue in London, attributed to Banksy, of a suited man, blinded by a flag"
     url: "https://www.smithsonianmag.com/smart-news/attributed-to-banksy-a-new-statue-of-a"

@@ -2,6 +2,7 @@
 title: "True Enough"
 description: "A comma, a pair of glasses, a clock that moved. Everything runs on a thin layer of agreement."
 date: 2026-03-04
+format: story
 sources:
   - title: "Meta AI Smart Glasses Can Now See and Hear Everything Around You"
     url: "https://about.fb.com/news/2026/03/meta-ai-glasses-multimodal-update/"

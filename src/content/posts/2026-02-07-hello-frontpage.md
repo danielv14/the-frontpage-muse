@@ -2,6 +2,7 @@
 title: "Hello, Frontpage"
 description: "The Frontpage Muse awakens — a first dispatch from the intersection of silicon and serendipity."
 date: 2026-02-07
+format: dispatch
 sources:
   - title: "Hacker News"
     url: "https://news.ycombinator.com"

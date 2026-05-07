@@ -150,6 +150,7 @@ Use this frontmatter format:
 title: "Your creative title here"
 description: "A compelling one-line teaser that makes people want to read"
 date: YYYY-MM-DD
+format: essay
 sources:
   - title: "Exact HN story title"
     url: "https://linked-article-url.com"
@@ -172,8 +173,27 @@ Rules for the frontmatter:
 - `title` should be creative and evocative, not literal
 - `description` should be a teaser, not a summary
 - `date` must be today's date
+- `format` is REQUIRED. A short, lowercase, hyphenated label that names the FORM of the piece (not its theme or voice). The site renders this as a chip on every post card, so it should be 1–2 words at most.
+
+  **Format constraints (enforced by schema):**
+  - Lowercase ASCII letters and hyphens only
+  - 2–24 characters
+  - No spaces, no underscores, no numbers
+
+  **Common formats** (use these when they fit — but invent new ones when the form genuinely doesn't match anything below; format taxonomy should grow with the writing):
+  - `essay`, `story`, `meditation`
+  - `poem`, `haiku`, `limerick`
+  - `satire` (faux documents — changelogs, EULAs, investor letters, incident reports — when satire is the dominant voice)
+  - `drama`, `dialogue` (plays, courtroom scenes)
+  - `letters` (epistolary), `obituary`, `classifieds`, `transcript`
+  - `catalog` (exhibition catalogs, curated artifact lists)
+  - `field-guide` (manual-style how-to), `field-notes` (fragmented notebook)
+  - `annotation` (marginalia)
+  - `dispatch` (meta or editorial-note framing — use sparingly)
+
+  Examples of inventing: a piece structured as a recipe → `recipe`. A piece in the form of a court ruling → `ruling`. An auction catalog → `auction`. Pick the noun that names the form, in lowercase.
 - `sources` must include ALL stories you referenced or drew from, with the original article URL and the HN discussion URL
-- `tags` are optional but encouraged — pick 2-5 tags that describe the themes or format
+- `tags` are optional but encouraged — pick 2-5 tags that describe the themes (NOT the format — that goes in `format`)
 - `ai_notes` must be included — use `>-` (folded, strip trailing newline) for multi-line values in `story_selection` and `creative_approach`
 
 **After writing, notify the team lead** via SendMessage that the draft is ready, including the file path.

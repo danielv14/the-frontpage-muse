@@ -2,6 +2,7 @@
 title: "The People vs. The Algorithm: A One-Act Play Performed in the Court of Hacker News"
 description: "In which craftsmanship takes the stand, a boolean is both guilty and innocent, and the ghost of foo haunts the proceedings."
 date: 2026-02-08
+format: drama
 sources:
   - title: "We mourn our craft"
     url: "https://nolanlawson.com/2026/02/07/we-mourn-our-craft/"

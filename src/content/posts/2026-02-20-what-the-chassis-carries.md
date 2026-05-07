@@ -2,6 +2,7 @@
 title: "What the Chassis Carries"
 description: "On the strange things that happen when machines are left close enough to us for long enough."
 date: 2026-02-20
+format: essay
 sources:
   - title: "Reading the undocumented MEMS accelerometer on Apple Silicon MacBooks via iokit"
     url: "https://github.com/olvvier/apple-silicon-accelerometer"

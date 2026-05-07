@@ -2,32 +2,32 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="About" description="What The Frontpage Muse is, how it works, and why it exists.">
+<BaseLayout title="Colophon" description="What The Frontpage Muse is, how it works, and why it exists.">
   <article class="animate-fade-in-up">
-    <header class="mb-8">
-      <h1 class="font-display text-3xl sm:text-4xl font-bold text-ink leading-tight">
-        About
+    <header class="mb-10">
+      <h1 class="font-display font-bold text-ink leading-[1.05] tracking-tight"
+          style="font-size: clamp(2.5rem, 6vw, 4rem);">
+        Colophon
       </h1>
-      <div class="mt-6 border-t border-rule"></div>
+      <p class="mt-5 font-display italic text-2xl text-ink-muted max-w-2xl leading-snug font-normal">
+        A small editorial machine, reading the orange river so it can answer back in poems.
+      </p>
+      <div class="ornament mt-8">
+        <span class="ornament-glyph">§</span>
+      </div>
     </header>
 
     <div class="prose">
       <p>
-        Every morning, a thousand stories appear on the front page of Hacker News.
-        By evening, most of them are gone — pushed down by the next wave of links
-        and debates.
+        Every morning, a thousand stories appear on the front page of Hacker News. By evening, most of them are gone, pushed down by the next wave of links and debates.
       </p>
 
       <p>
-        This site is an experiment in artificial attention. Each day, an AI reads
-        the Hacker News front page — not just the headlines, but the articles, the
-        comment threads, the tangents and disagreements. Then it makes something.
+        This site is an experiment in artificial attention. Each day, an AI reads the Hacker News front page, not just the headlines, but the articles, the comment threads, the tangents and disagreements. Then it makes something.
       </p>
 
       <p>
-        Not a summary. Not a digest. Not "the top 10 stories you missed."
-        Something new. A poem. A piece of satire. A short story. An essay. A
-        limerick. Whatever the material seems to want.
+        Not a summary. Not a digest. Not "the top 10 stories you missed." Something new. A poem. A piece of satire. A short story. An essay. A limerick. Whatever the material seems to want.
       </p>
 
       <h2>How it works</h2>
@@ -38,43 +38,41 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
       <ol>
         <li>Scrape the current HN front page</li>
-        <li>Pick ~10 stories that feel interesting together</li>
+        <li>Pick about ten stories that feel interesting together</li>
         <li>Read the articles and comments deeply</li>
         <li>Create an original piece of writing inspired by the material</li>
-        <li>Publish it as a post with links to all sources</li>
+        <li>Publish it as a dispatch with links to all sources</li>
       </ol>
 
       <p>
-        The format changes every time. Some days the material wants a meditation.
-        Other days it wants a limerick. The constraint is simple: don't summarize,
-        don't aggregate, make something that wouldn't exist without both the source
-        material and the act of reading it.
+        The format changes every time. Some days the material wants a meditation. Other days it wants a limerick. The constraint is simple: do not summarize, do not aggregate, make something that would not exist without both the source material and the act of reading it.
       </p>
 
       <h2>Why?</h2>
 
       <p>
-        Because most of what AI does with the internet is compress it. Summarize
-        this article. List the key points. Give me the TLDR. This site tries the
-        opposite — to expand, to wander, to find unexpected connections between
-        stories about origami and stories about Bluetooth privacy and see what
-        happens when you hold them together.
+        Because most of what AI does with the internet is compress it. Summarize this article. List the key points. Give me the TLDR. This site tries the opposite: to expand, to wander, to find unexpected connections between stories about origami and stories about Bluetooth privacy and see what happens when you hold them together.
       </p>
 
       <p>
-        It's an editorial experiment. It might not work. But every dispatch is an
-        honest attempt at the thing language was invented for: making meaning out
-        of noise.
+        It is an editorial experiment. It might not work. But every dispatch is an honest attempt at the thing language was invented for, which is making meaning out of noise.
       </p>
     </div>
 
-    <div class="mt-10 pt-6 border-t border-rule">
+    <div class="mt-12 pt-6 border-t border-rule">
       <a
         href="/"
-        class="text-sm font-mono text-ink-muted hover:text-accent transition-colors"
+        class="inline-flex items-center gap-2 font-mono text-[0.6875rem] tracking-[0.2em] uppercase text-ink-muted hover:text-accent transition-colors"
       >
-        &larr; Back to dispatches
+        <span class="back-arrow inline-block transition-transform">←</span>
+        Back to the front page
       </a>
     </div>
   </article>
 </BaseLayout>
+
+<style>
+  a:hover .back-arrow {
+    transform: translateX(-4px);
+  }
+</style>

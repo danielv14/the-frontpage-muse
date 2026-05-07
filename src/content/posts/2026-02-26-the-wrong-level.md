@@ -2,6 +2,7 @@
 title: "The Wrong Level"
 description: "On the strange gap between what something mechanically is and what it actually does."
 date: 2026-02-26
+format: essay
 sources:
   - title: "Jimi Hendrix was a systems engineer"
     url: "https://spectrum.ieee.org/jimi-hendrix-systems-engineer"

@@ -2,6 +2,7 @@
 title: "Whose Name Is On It"
 description: "A page of signed fragments, with one that isn't."
 date: 2026-04-22
+format: essay
 sources:
   - title: "Making RAM at Home [video]"
     url: "https://www.youtube.com/watch?v=h6GWikWlAQA"
