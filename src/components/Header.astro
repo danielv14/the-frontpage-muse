@@ -18,22 +18,14 @@ const isActive = (href: string) => {
 
 const allPosts = await getCollection("posts");
 const issueCount = allPosts.length;
-const today = new Date();
-const dayName = today.toLocaleDateString("en-US", { weekday: "long" }).toUpperCase();
-const fullDate = today
-  .toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
-  .toUpperCase();
-const volumeYear = today.getFullYear();
-const volumeRoman = formatRoman(volumeYear - 2025);
+const volumeRoman = formatRoman(new Date().getFullYear() - 2025);
 ---
 
 <header class="w-full">
   <div class="w-full max-w-3xl mx-auto px-5 pt-8 pb-3">
     <!-- Issue line -->
-    <div class="issue-line justify-between">
+    <div class="issue-line">
       <span>VOL. {volumeRoman} <span class="issue-sep">·</span> NO. {issueCount}</span>
-      <span class="hidden sm:inline">{dayName} <span class="issue-sep">·</span> {fullDate}</span>
-      <span class="sm:hidden">{fullDate}</span>
     </div>
 
     <!-- Masthead -->
