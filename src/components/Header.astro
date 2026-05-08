@@ -31,9 +31,9 @@ const volumeRoman = formatRoman(volumeYear - 2025);
   <div class="w-full max-w-3xl mx-auto px-5 pt-8 pb-3">
     <!-- Issue line -->
     <div class="issue-line justify-between">
-      <span>VOL. {volumeRoman} <span class="issue-sep">·</span> NO. {issueCount}</span>
-      <span class="hidden sm:inline">{dayName} <span class="issue-sep">·</span> {fullDate}</span>
-      <span class="sm:hidden">{fullDate}</span>
+      <span>VOL. <span data-issue-volume>{volumeRoman}</span> <span class="issue-sep">·</span> NO. {issueCount}</span>
+      <span class="hidden sm:inline"><span data-issue-day>{dayName}</span> <span class="issue-sep">·</span> <span data-issue-date>{fullDate}</span></span>
+      <span class="sm:hidden" data-issue-date>{fullDate}</span>
     </div>
 
     <!-- Masthead -->
@@ -88,4 +88,36 @@ const volumeRoman = formatRoman(volumeYear - 2025);
     color: var(--color-accent);
   }
 </style>
+
+<script is:inline>
+  (() => {
+    const toRoman = (num) => {
+      const numerals = [
+        [1000, "M"], [900, "CM"], [500, "D"], [400, "CD"],
+        [100, "C"], [90, "XC"], [50, "L"], [40, "XL"],
+        [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"],
+      ];
+      let result = "";
+      let remaining = num;
+      for (const [value, sym] of numerals) {
+        while (remaining >= value) {
+          result += sym;
+          remaining -= value;
+        }
+      }
+      return result;
+    };
+
+    const today = new Date();
+    const dayName = today.toLocaleDateString("en-US", { weekday: "long" }).toUpperCase();
+    const fullDate = today
+      .toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+      .toUpperCase();
+    const volumeRoman = toRoman(today.getFullYear() - 2025);
+
+    document.querySelectorAll("[data-issue-day]").forEach((el) => (el.textContent = dayName));
+    document.querySelectorAll("[data-issue-date]").forEach((el) => (el.textContent = fullDate));
+    document.querySelectorAll("[data-issue-volume]").forEach((el) => (el.textContent = volumeRoman));
+  })();
+</script>
 
