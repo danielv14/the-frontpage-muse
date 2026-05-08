@@ -1,0 +1,279 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+import { calculateReadingTime } from "../../utils/readingTime";
+import { displayFormat } from "../../utils/format";
+import { issueNumberFor, formatRoman } from "../../utils/issueNumber";
+
+export const getStaticPaths = async () => {
+  const magazines = await getCollection("magazines");
+  return magazines.map((issue) => ({
+    params: { slug: issue.id },
+    props: { issue, allIssues: magazines },
+  }));
+};
+
+const { issue, allIssues } = Astro.props;
+const { Content } = await render(issue);
+const readingTime = calculateReadingTime(issue.body ?? "");
+const format = displayFormat(issue.data.format);
+const issueNum = issueNumberFor(
+  issue.data.date,
+  allIssues.map((i: any) => i.data.date),
+);
+
+const formatRangeLong = (d: Date): string => {
+  return d.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+  });
+};
+
+const formatRangeShort = (d: Date): string => {
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+};
+
+const rangeStart = formatRangeLong(issue.data.coverage.start);
+const rangeEnd = formatRangeLong(issue.data.coverage.end);
+const rangeYear = issue.data.coverage.end.getFullYear();
+const volumeRoman = formatRoman(issue.data.date.getFullYear() - 2025);
+---
+
+<BaseLayout
+  title={issue.data.title}
+  description={issue.data.description}
+  type="article"
+  publishedDate={issue.data.date}
+  tags={issue.data.tags}
+>
+  <article class="animate-fade-in-up">
+    <!-- Magazine cover block -->
+    <header class="mb-12">
+      <div class="cover-block">
+        <div class="cover-eyebrow">The Frontpage Muse Magazine</div>
+        <div class="cover-volume">
+          Volume {volumeRoman} <span class="cover-sep">·</span> Issue No. {issueNum}
+        </div>
+        <div class="cover-rule"></div>
+        <div class="cover-week">
+          {rangeStart} – {rangeEnd}, {rangeYear}
+        </div>
+      </div>
+
+      <!-- Format chip -->
+      <div class="kicker mt-8">{format}</div>
+
+      <!-- Title -->
+      <h1 class="font-display font-bold text-ink leading-[1.0] tracking-tight mt-4 cover-title"
+          style="font-size: clamp(2.25rem, 6.5vw, 4rem);">
+        {issue.data.title}
+      </h1>
+
+      <!-- Dek / standfirst -->
+      <p class="mt-6 font-display italic text-xl sm:text-2xl text-ink-muted leading-snug max-w-2xl font-normal">
+        {issue.data.description}
+      </p>
+
+      <!-- Reading time -->
+      <div class="mt-5 font-mono text-[0.625rem] tracking-[0.22em] uppercase text-ink-faint">
+        {readingTime} min read
+      </div>
+
+      <!-- Behind-the-curtain marginalia -->
+      {issue.data.ai_notes && (
+        <details class="mt-6 group/curtain">
+          <summary class="curtain-summary">
+            Behind the curtain
+            <span class="curtain-arrow">+</span>
+          </summary>
+          <div class="mt-4 space-y-3 text-base font-body italic text-ink-muted leading-relaxed max-w-2xl">
+            <p>{issue.data.ai_notes.story_selection}</p>
+            <p>{issue.data.ai_notes.creative_approach}</p>
+          </div>
+        </details>
+      )}
+
+      <div class="ornament mt-10">
+        <span class="ornament-glyph">§</span>
+      </div>
+    </header>
+
+    <!-- Issue content -->
+    <div class="prose">
+      <Content />
+    </div>
+
+    <!-- Editor's signature -->
+    <div class="signature-block">
+      <div class="signature-rule"></div>
+      <div class="signature-line">The Editor</div>
+      <div class="signature-mark">
+        The Frontpage Muse <span class="signature-sep">·</span> Volume {volumeRoman} <span class="signature-sep">·</span> No. {issueNum}
+      </div>
+    </div>
+
+    <!-- Referenced posts -->
+    {issue.data.referenced_posts && issue.data.referenced_posts.length > 0 && (
+      <footer class="mt-14">
+        <div class="ornament">
+          <span class="ornament-glyph">❦</span>
+        </div>
+        <h2 class="font-display italic text-xl text-ink-muted font-normal mb-3">In this issue</h2>
+        <ul class="space-y-2.5">
+          {issue.data.referenced_posts.map((ref: { slug: string; title: string; date: Date }) => (
+            <li class="text-base font-body leading-snug">
+              <a href={`/posts/${ref.slug}`} class="link-draw !text-accent">
+                {ref.title}
+              </a>
+              <span class="text-rule mx-2">·</span>
+              <span class="text-ink-faint font-mono text-[0.6875rem] tracking-[0.15em] uppercase">
+                {formatRangeShort(ref.date)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </footer>
+    )}
+
+    <!-- Back link -->
+    <div class="mt-12 pt-6 border-t border-rule">
+      <a
+        href="/magazine"
+        class="inline-flex items-center gap-2 font-mono text-[0.6875rem] tracking-[0.2em] uppercase text-ink-muted hover:text-accent transition-colors"
+      >
+        <span class="back-arrow inline-block transition-transform">←</span>
+        Back to the magazine
+      </a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  /* ---- Cover block (magazine masthead for the issue page) ---- */
+
+  .cover-block {
+    text-align: center;
+    padding: 1.5rem 0 0.5rem;
+  }
+
+  .cover-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    margin-bottom: 0.875rem;
+  }
+
+  .cover-volume {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--color-ink);
+    letter-spacing: -0.005em;
+    line-height: 1.2;
+  }
+
+  .cover-sep {
+    color: var(--color-rule);
+    font-style: normal;
+    margin: 0 0.25rem;
+  }
+
+  .cover-rule {
+    width: 3.5rem;
+    height: 1px;
+    background: var(--color-accent);
+    margin: 1rem auto;
+    opacity: 0.7;
+  }
+
+  .cover-week {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .cover-title {
+    /* slightly tighter tracking on the magazine title */
+    letter-spacing: -0.018em;
+  }
+
+  /* ---- Signature block (editor's sign-off at end of issue) ---- */
+
+  .signature-block {
+    margin: 4rem auto 0;
+    text-align: center;
+    max-width: 28rem;
+  }
+
+  .signature-rule {
+    width: 4rem;
+    height: 1px;
+    background: var(--color-rule);
+    margin: 0 auto 1.5rem;
+  }
+
+  .signature-line {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.5rem;
+    color: var(--color-ink);
+    line-height: 1.2;
+  }
+
+  .signature-mark {
+    margin-top: 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  .signature-sep {
+    color: var(--color-rule);
+    margin: 0 0.125rem;
+  }
+
+  /* ---- Curtain marginalia ---- */
+
+  .curtain-summary {
+    cursor: pointer;
+    list-style: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--color-ink-faint);
+    transition: color 0.2s ease;
+    user-select: none;
+  }
+  .curtain-summary::-webkit-details-marker {
+    display: none;
+  }
+  .curtain-summary:hover {
+    color: var(--color-ink-muted);
+  }
+  .curtain-arrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    transition: transform 0.2s ease;
+    display: inline-block;
+  }
+  details[open] .curtain-arrow {
+    transform: rotate(45deg);
+  }
+  a:hover .back-arrow {
+    transform: translateX(-4px);
+  }
+</style>
