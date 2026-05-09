@@ -76,15 +76,54 @@ Pay attention to:
 
 **What to take away:** Don't make notes of statistics, specifics, or quotes to reproduce. Instead, notice what *impressions* form — what questions arise, what emotions surface, what contradictions emerge. These impressions are your creative fuel.
 
+## Step 4.5: Format and Tone Recency Check
+
+Before you settle on a direction, you must check what the recent posts have been doing — so you don't continue a pattern by accident.
+
+Use Glob to list `src/content/posts/*.md` and pick the **8 most recent** by date in filename. For each, read ONLY the frontmatter (you are still forbidden from reading the body or `ai_notes` of past posts). Note:
+
+- The `format` field of each
+- The `description` field of each (this gives you a flavor of tone without reading the post)
+
+Then write down, for yourself:
+
+- The list of 8 recent formats
+- Whether the recent run skews toward one tonal register (e.g. "the last 5 descriptions all sound elegiac / introspective / quietly observational")
+
+**Hard rules from this list:**
+
+1. Your proposed `format` MUST NOT appear among the 8 most recent formats. No exceptions, even if the material seems to demand it. The format menu is large; if you feel cornered, that's a signal to invent a new format (see Step 4.6).
+2. If the last 3 posts share an obvious tonal register (melancholic, sarcastic, reflective, etc.), your post MUST shift register. Push toward what's been *missing* — anger, joy, absurdity, technical sharpness, plain reportage, dry comedy, whatever the recent run has not been doing.
+
+This check is non-negotiable and happens BEFORE you draft the pitch. The whole point of The Frontpage Muse is range — readers should feel each day is a different room, not the same room with different furniture.
+
+## Step 4.6: Format Invention Prompt
+
+You have the menu of standard formats further down in this document. Before you settle on one, ask yourself: **is there a format the material is suggesting that doesn't appear in the menu?**
+
+Some prompts to spark inventions:
+
+- If the sources are about failure and repair — is there a `recipe` format that teaches *how to fail well*?
+- If the sources are about erasure and attribution — is there a `manifesto` or `declaration`?
+- If the sources are about repetition — a `variation-set` or `theme-and-modifications`?
+- If the sources are about systems and structure — a `blueprint`, `schematic`, or `spec`?
+- If the sources are about people — a `census`, `interview`, or `roll-call`?
+- If the sources are about disputes — a `verdict`, `dissent`, or `minutes`?
+
+Inventing isn't required every day — sometimes a standard form fits perfectly. But it should be a regular muscle. Hybrid forms (a satire structured as a standardized test, a story shaped like an exhibition catalog) tend to produce the strongest posts in this corpus. Lean into that.
+
+If you invent a format, name it in lowercase with hyphens (e.g. `recipe`, `blueprint`, `variation-set`, `roll-call`) and include one sentence in the pitch explaining what the form is and why this material called for it.
+
 ## Step 5: Send Creative Pitch
 
-Now you've read ~10 stories in depth. Step back. Let the material settle. What's the *one thing* that sticks with you? What question, feeling, or observation keeps surfacing?
+Now you've read ~10 stories in depth, checked the recent format/tone history, and considered whether to invent a form. Step back. Let the material settle. What's the *one thing* that sticks with you? What question, feeling, or observation keeps surfacing?
 
 **Send a creative pitch** to the team lead via SendMessage. Include:
 - **The idea** — what do you want to write about? What question, observation, or feeling drives the piece? This is the most important part of the pitch.
 - A working title
 - The form and tone
 - Which stories *inspired* this direction (not "which stories will be covered")
+- **Recency report:** the list of the 8 most recent formats you read in Step 4.5, the tonal register you observed across the last 3, and one sentence explaining how your proposed format and tone differ from that recent run. If you're proposing an invented format, define it in one sentence.
 
 The pitch should describe a piece of writing that could stand on its own even if the reader never clicks a single source link. If your pitch reads like "I'll write about these 8 articles in the form of X" — that's not an idea, that's a structure. Find the idea first.
 
@@ -109,6 +148,8 @@ You have complete creative freedom. The content you produce should be:
 
 These are the anti-patterns. If your draft looks like any of these, start over:
 
+- **Elegiac-by-default** — quiet, rueful, observational meditation has become this corpus's comfort zone. If your draft sounds wistful, if its sentences end in soft understatements, if its rhythm is slow and contemplative, and if you arrived there because the material "felt sad" rather than as a deliberate choice — that's the rut. The material rarely demands elegy; the writer's habit does. Push the other way unless you can articulate a specific reason this exact material requires this exact register and no other.
+- **The "The X" title and the abstract noun ending** — titles like "The Vacancy", "The Fold", "The Keepers" have piled up. If your title is `The <abstract noun>` or `What <verb-phrase>`, it's probably the default. Try a title that names a concrete thing, makes a claim, asks a question, sounds like a headline, or is openly absurd.
 - **One section per source** — where each article "gets its turn" inside a creative frame. This is a listicle in costume. Headers are fine when they organize the *argument*, but if each headed section maps to a single source, the structure is wrong. Sources should blend across sections.
 - **Creative format as container** — picking a format (awards, courtroom, nature doc) and then filling each slot with a different article. The format should serve the idea, not organize the sources.
 - **Thematic summaries** — where the "creative" part is just a clever voice retelling what each article said.
@@ -133,7 +174,9 @@ A few forms to spark ideas (but invent your own — let the idea choose the form
 
 ### The Litmus Test
 
-Before you send the draft, ask yourself: **if I removed every fact, statistic, and specific detail from the source articles — is there still an idea here?** If the answer is no — if what remains is just a creative frame with nothing inside it — then you don't have a post yet. You have a format looking for content. Go back to Step 5 and find the idea.
+Before you send the draft, ask yourself: **does this post have its own center of gravity — a thesis, a stance, a question, a story, a position — that the reader can name when they're done?** If the only answer is "it ruminates on a theme" or "it gestures at a feeling", the post probably doesn't have a center yet.
+
+This is NOT an instruction to abstract away from the specifics. A post that takes a clear position on a concrete technical issue, that argues for or against a real thing, that walks through a piece of code or a real-world failure in detail — passes this test. The center can be a claim or an artifact, not just an idea. The test exists to prevent empty creative frames, not to push the writing toward meditation. Concrete, fact-rich, opinionated posts are welcome.
 
 ## Step 7: Generate the Markdown File
 
@@ -166,6 +209,12 @@ ai_notes:
   creative_approach: >-
     Why this form, tone, and structure was chosen —
     what in the material steered the creative decision.
+  tonal_statement: >-
+    One sentence naming the dominant tone of this post and explaining
+    explicitly how it differs from the tonal register of the most
+    recent 3 posts you observed in Step 4.5. Example: "Straightforwardly
+    angry and argumentative — a deliberate pivot away from the
+    introspective register of the past three posts."
 ---
 ```
 
@@ -194,7 +243,7 @@ Rules for the frontmatter:
   Examples of inventing: a piece structured as a recipe → `recipe`. A piece in the form of a court ruling → `ruling`. An auction catalog → `auction`. Pick the noun that names the form, in lowercase.
 - `sources` must include ALL stories you referenced or drew from, with the original article URL and the HN discussion URL
 - `tags` are optional but encouraged — pick 2-5 tags that describe the themes (NOT the format — that goes in `format`)
-- `ai_notes` must be included — use `>-` (folded, strip trailing newline) for multi-line values in `story_selection` and `creative_approach`
+- `ai_notes` must be included — use `>-` (folded, strip trailing newline) for multi-line values in `story_selection`, `creative_approach`, and `tonal_statement`. All three are required.
 
 **After writing, notify the team lead** via SendMessage that the draft is ready, including the file path.
 
