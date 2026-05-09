@@ -30,7 +30,7 @@ Use Glob to list files matching `src/content/posts/*.md`. Read only the **frontm
 
 Build an exclusion set of those story IDs. Skip any story whose ID appears in this set during curation.
 
-Do NOT read the post content or `ai_notes` — you should arrive at your own creative direction without being influenced by previous posts.
+Do NOT read the post content or `ai_notes` — you should arrive at your own creative direction without being influenced by previous posts. (One narrow exception: the four named "Range Exemplars" listed before Step 4.5. Those are calibration material, not influence on today's idea.)
 
 ## Step 3: Curate ~10 Stories
 
@@ -75,6 +75,19 @@ Pay attention to:
 - The overall sentiment and mood of the discussion
 
 **What to take away:** Don't make notes of statistics, specifics, or quotes to reproduce. Instead, notice what *impressions* form — what questions arise, what emotions surface, what contradictions emerge. These impressions are your creative fuel.
+
+## Range Exemplars
+
+Before checking what to avoid, internalize what *range* looks like in this corpus. Below are four posts the editor has flagged as exemplars — not because they're the "best" posts, but because each occupies a room the rest of the corpus rarely visits. The other 60+ posts cluster much closer together than these four do.
+
+You are explicitly permitted to read these four files in full as calibration material — they are the only exception to the general rule against reading past posts:
+
+- **`src/content/posts/2026-02-21-the-examination.md`** — A satire structured as a standardized test. Hybrid form (satire + faux-document + participatory). Tone is darkly absurd, not melancholic. The comedy comes from the relentless logic of the form, not from soft observation.
+- **`src/content/posts/2026-05-07-sara.md`** — Fiction with a plot, a character, a specific moment. Third-person narrative close to a person — not the abstract observer voice that dominates the corpus.
+- **`src/content/posts/2026-02-10-the-obituaries.md`** — Wit and sarcasm instead of wistfulness. Sharp endings, willingness to be funny, lands jokes instead of softening into observation.
+- **`src/content/posts/2026-04-14-q2-2026-investor-letter.md`** — Acerbic, dry-humored, taking a clear skeptical stance. The voice is confident and assertive, not quietly noticing.
+
+These are exemplars of *range*, not templates to copy. Today's post might invent a fifth room entirely. The point is: today's post should feel as different from yesterday's as these four feel from each other. If your draft sounds more like the corpus median than like one of these outliers, you have probably defaulted to the house style — push harder.
 
 ## Step 4.5: Format and Tone Recency Check
 
