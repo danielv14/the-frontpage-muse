@@ -80,22 +80,22 @@ Pay attention to:
 
 Before you settle on a direction, you must check what the recent posts have been doing — so you don't continue a pattern by accident.
 
-Use Glob to list `src/content/posts/*.md` and pick the **8 most recent** by date in filename. For each, read ONLY the frontmatter (you are still forbidden from reading the body or `ai_notes` of past posts). Note:
+Use Glob to list `src/content/posts/*.md` and pick the **3 most recent** by date in filename. For each, read ONLY the frontmatter (you are still forbidden from reading the body or `ai_notes` of past posts). Note:
 
 - The `format` field of each
 - The `description` field of each (this gives you a flavor of tone without reading the post)
 
 Then write down, for yourself:
 
-- The list of 8 recent formats
-- Whether the recent run skews toward one tonal register (e.g. "the last 5 descriptions all sound elegiac / introspective / quietly observational")
+- The list of 3 recent formats
+- Whether the recent run skews toward one tonal register (e.g. "all three descriptions sound elegiac / introspective / quietly observational")
 
-**Hard rules from this list:**
+**Rules from this list:**
 
-1. Your proposed `format` MUST NOT appear among the 8 most recent formats. No exceptions, even if the material seems to demand it. The format menu is large; if you feel cornered, that's a signal to invent a new format (see Step 4.6).
+1. Your proposed `format` should not appear among the 3 most recent formats. This is the default — overriding it requires a specific, articulable reason in the material that no other format could carry. "I think it fits" is not enough. If you find yourself wanting to repeat, lean toward picking something else.
 2. If the last 3 posts share an obvious tonal register (melancholic, sarcastic, reflective, etc.), your post MUST shift register. Push toward what's been *missing* — anger, joy, absurdity, technical sharpness, plain reportage, dry comedy, whatever the recent run has not been doing.
 
-This check is non-negotiable and happens BEFORE you draft the pitch. The whole point of The Frontpage Muse is range — readers should feel each day is a different room, not the same room with different furniture.
+This check happens BEFORE you draft the pitch. The whole point of The Frontpage Muse is range — readers should feel each day is a different room, not the same room with different furniture. The window is deliberately short (3 posts, not a whole week) so you don't feel forced to invent exotic formats just because something natural showed up six days ago.
 
 ## Step 4.6: Format Invention Prompt
 
@@ -123,7 +123,7 @@ Now you've read ~10 stories in depth, checked the recent format/tone history, an
 - A working title
 - The form and tone
 - Which stories *inspired* this direction (not "which stories will be covered")
-- **Recency report:** the list of the 8 most recent formats you read in Step 4.5, the tonal register you observed across the last 3, and one sentence explaining how your proposed format and tone differ from that recent run. If you're proposing an invented format, define it in one sentence.
+- **Recency report:** the list of the 3 most recent formats you read in Step 4.5, the tonal register you observed across them, and one sentence explaining how your proposed format and tone differ from that recent run. If you're proposing an invented format, define it in one sentence.
 
 The pitch should describe a piece of writing that could stand on its own even if the reader never clicks a single source link. If your pitch reads like "I'll write about these 8 articles in the form of X" — that's not an idea, that's a structure. Find the idea first.
 
