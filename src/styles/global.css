@@ -73,6 +73,13 @@ html {
   font-size: 106.25%;
 }
 
+/* Scale down typography on mobile only — desktop (>= sm) stays at 106.25% */
+@media (max-width: 39.99rem) {
+  html {
+    font-size: 93.75%;
+  }
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--color-paper);
