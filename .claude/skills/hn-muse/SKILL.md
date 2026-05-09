@@ -19,12 +19,16 @@ When this skill is invoked, execute the ENTIRE pipeline below. No pauses, no ask
 
 ## Phase 2: Review Creative Pitch
 
-The writer will scrape HN, deep-read articles and comments, then send you a creative pitch. Evaluate it:
+The writer will scrape HN, deep-read articles and comments, then send you a creative pitch. The pitch must include a "recency report" naming the 3 most recent formats and the tonal register across them — if it doesn't, redirect immediately and ask for one.
 
-- **Format freshness:** Does it repeat the format of the most recent post or the one before? Read the two latest posts' `ai_notes.creative_approach` yourself to check. If the pitch repeats a recent format, redirect.
+Evaluate the pitch:
+
+- **Format freshness:** Use Glob on `src/content/posts/*.md` and read the frontmatter `format` field of the **3 most recent** posts. If the pitch's proposed format appears in that list, redirect by default. The rule is general — no special case per format. The override bar is high: only accept a repeat if the writer has articulated something specific in the material that genuinely requires this exact format and no other could carry it. "It fits" is not enough. The window is intentionally short (3 posts, not a whole week) so the writer isn't forced to invent exotic formats just because something natural appeared six days ago.
+- **Tonal freshness:** Read the `description` field of the 3 most recent posts (one line each — fast). If they share an obvious register (melancholic, introspective, sarcastic, elegiac, rueful), and the pitch reads as a continuation of that register, redirect. Tell the writer specifically which register has dominated and suggest a contrasting one (anger, joy, absurdity, technical sharpness, dry comedy, plain reportage). The corpus's largest single failure mode is elegiac-by-default; weight your suspicion accordingly.
+- **Title freshness:** If the working title starts with `The <abstract noun>` or `What <verb-phrase>`, scrutinize. Many recent posts share that pattern. Suggest something more concrete, more declarative, or more openly strange.
 - **Creative interest:** Is the direction surprising, original, worth reading? Would you want to read this?
-- **Material fit:** Does the chosen format serve the material, or is it forced?
-- **Structural independence:** Does the pitch describe an *idea* — a thesis, observation, or question? Or does it describe a *format + a list of articles*? If the pitch is essentially "I'll write about these N articles in the form of X", ask for rework. The pitch must lead with what the piece is *about*, not what it *contains*.
+- **Material fit:** Does the chosen format serve the material, or is it forced? (Note: "forced" is sometimes the right answer — a deliberate mismatch can produce the most surprising writing. Don't reject mismatches reflexively.)
+- **Structural independence:** Does the pitch describe an *idea* — a thesis, observation, question, position, or artifact? Or does it describe a *format + a list of articles*? If the pitch is essentially "I'll write about these N articles in the form of X", ask for rework. The pitch must lead with what the piece is *about*, not what it *contains*. Posts can have a concrete center (a position, a technical claim, a story with a plot) — they don't all need to be meditations.
 
 Respond with ONE of:
 - **Approved** (with optional brief notes like "lean into X" or "the Y angle is strongest")
@@ -53,12 +57,13 @@ Read the file and validate:
 - [ ] `format` — REQUIRED. Lowercase, hyphen-separated, 2–24 chars (e.g. `essay`, `story`, `field-guide`). Names the FORM, not the theme. The writer is encouraged to invent new format labels when nothing in the common list fits — but it must accurately describe the form, render well as a 1–2 word chip, and not be a synonym for an existing format. If you see something like `format: long-meditative-essay-on-presence`, push back: that's the description, not the format. The build fails if `format` is missing or breaks the schema.
 - [ ] `sources` — array with `title`, `url`, and `hn_url` for each source
 - [ ] `tags` — present (2-5 tags) describing themes, NOT format
-- [ ] `ai_notes` with `story_selection` and `creative_approach` using `>-` syntax
+- [ ] `ai_notes` with `story_selection`, `creative_approach`, AND `tonal_statement` using `>-` syntax. The `tonal_statement` must explicitly name how this post's tone differs from the most recent 3. If it just says "reflective" or "thoughtful" without naming the contrast, send it back.
 
 **Content checklist:**
 - [ ] Sources reference real stories (URLs and story IDs look plausible)
 - [ ] Content is original — not a summary, listicle, or "one section per source" structure in a creative costume
-- [ ] The post has its own thesis or observation — not just a creative frame around article summaries
+- [ ] The post has its own center — a thesis, observation, claim, story, position, or concrete artifact. NOT just a creative frame around article summaries. A technical or argumentative post with a clear stance passes; a piece that "ruminates on a theme" without arriving anywhere does not.
+- [ ] Tone matches the `tonal_statement` and breaks from the recent run. If the post claims to be "angry" or "absurd" but reads as the same elegiac register as the past week, send it back.
 - [ ] No 1:1 mapping between sources and sections — sources blend, merge, or sit in the background. Headers are fine when they organize *ideas*, but each headed section should not correspond to a single source.
 - [ ] No excessive `---` horizontal rules
 - [ ] English language
