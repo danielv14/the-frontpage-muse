@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://the-frontpage-muse.vercel.app',
+  site: 'https://frontpagemuse.danielwernberg.blog',
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],

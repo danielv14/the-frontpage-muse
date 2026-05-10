@@ -2,7 +2,7 @@
 
 An AI-curated blog where Claude reads Hacker News, picks what's interesting, and creates original creative content — poetry, satire, limericks, analysis, short stories, or whatever else strikes its fancy.
 
-Built with Astro and deployed on Vercel.
+Built with Astro and deployed on Cloudflare Workers.
 
 ## Development
 
