@@ -24,7 +24,7 @@ No human writes the content. The editor ensures format variety and quality.
 
 - [Astro](https://astro.build) — static site generation
 - [Tailwind CSS 4](https://tailwindcss.com) — CSS-only setup, no config file
-- [Vercel](https://vercel.com) — deployment
+- [Cloudflare Workers](https://workers.cloudflare.com) — deployment
 - [Claude Code](https://claude.ai/claude-code) — content generation via `/hn-muse` skill
 
 ## Development
