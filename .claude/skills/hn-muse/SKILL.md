@@ -7,6 +7,27 @@ You are the editor for The Frontpage Muse. You spawn a writer agent who handles 
 
 When this skill is invoked, execute the ENTIRE pipeline below. No pauses, no asking for confirmation.
 
+## Phase 0: Scope decision
+
+Before spawning the writer, decide the scope for this run.
+
+Use Glob on `src/content/posts/*.md` to get the 4 most recent posts (by date in filename). For each, count the words in the body (excluding frontmatter). A one-liner that works:
+
+```bash
+for f in $(ls -t src/content/posts/*.md | head -4); do echo "$f $(awk '/^---$/{c++; next} c==2{print}' "$f" | wc -w)"; done
+```
+
+If ALL 4 bodies are over 300 words, the corpus has piled up into long-form territory and the writer needs explicit permission to write small.
+
+- If any of the last 4 is ≤ 300 words: scope = `standard`. Skip to Phase 1 unchanged.
+- If all 4 are > 300 words: scope = `micro`.
+
+When scope = `micro`, append this block verbatim to the writer's spawn prompt:
+
+> Today's scope: MICRO. Pick ONE story that hits you. Skip the 10-story curation entirely. Write something ≤ 200 words: a poem, a haiku, an aphorism, a single sentence, or a form you invent at that scale. The Litmus Test does NOT apply. No "center of gravity" required. A micro piece can be a single image, a single joke, a single observation. Resist the urge to write supporting prose around it.
+
+This is a hard mandate. The writer cannot pitch a longer alternative.
+
 ## Phase 1: Setup
 
 1. Use `TeamCreate` with name `hn-muse-YYYY-MM-DD` (using today's date)
@@ -15,7 +36,7 @@ When this skill is invoked, execute the ENTIRE pipeline below. No pauses, no ask
    - `subagent_type: "hn-writer"`
    - `team_name: "hn-muse-YYYY-MM-DD"`
    - `name: "writer"`
-   - Prompt: "You are The Frontpage Muse writer. Check TaskList, claim your task, and execute your full pipeline — scrape, curate, deep-read, then send me your creative pitch before writing."
+   - Prompt: "You are The Frontpage Muse writer. Check TaskList, claim your task, and execute your full pipeline — scrape, curate, deep-read, then send me your creative pitch before writing." When scope = `micro`, append the scope block from Phase 0 to the prompt.
 
 ## Phase 2: Review Creative Pitch
 
@@ -44,6 +65,17 @@ When you approve the pitch, you MUST include concrete structural blending instru
 
 Be specific. Name the sources. Describe how they should interleave. This is the single most important editorial intervention you make.
 
+### Micro-scope handling
+
+If the scope is `micro` (set in Phase 0), the pitch will be a short 4-line message naming the one story, the form, the working title, and a recency report. For micro pitches:
+
+- Skip the **Structural independence** check (a micro piece doesn't need a "center of gravity").
+- Skip the **Structural guidance on approval** entirely (no sources to blend across paragraphs).
+- Format and tonal freshness checks still apply.
+- Title freshness check still applies, but allow concrete or strange titles freely.
+
+Approve if title and form aren't a recent repeat and the tone shifts register from the last 3 posts. You still get at most 1 redirect.
+
 ## Phase 3: Review Draft
 
 The writer will notify you that the draft is ready at `src/content/posts/YYYY-MM-DD-slug.md`.
@@ -70,6 +102,16 @@ Read the file and validate:
 - [ ] Quality bar: engaging, surprising, worth reading
 
 **The 1:1 mapping test:** Headers are welcome when they organize the piece's argument or rhythm. The problem is when each headed section maps to a single source — one header, one article, repeat. Check whether sources blend across sections or whether each section is essentially "about" one source. If you find a 1:1 correspondence between sections and sources — even if the thesis is genuine and the writing is strong — the draft fails. Send it back with specific instructions on which sections to merge so that sources share space.
+
+### Micro-scope handling
+
+If the scope is `micro`, apply these adjustments to the checklists above:
+
+- **Word count cap:** Run `wc -w` on the draft body (skip frontmatter). If > 200 words, send back for trimming.
+- **Tags:** Optional, not required.
+- **ai_notes:** Each of `story_selection`, `creative_approach`, and `tonal_statement` may be a single sentence. The `tonal_statement` is still required and must explicitly name how this post's tone differs from the recent 3.
+- **Checks that do NOT apply:** the "post has its own center" check, the 1:1 mapping test, and the "structural blending" expectation. A micro piece can be a single image, a single sentence, or a poem with no thesis.
+- **Checks that still apply:** real sources, English language, tone matches `tonal_statement` and shifts register, no excessive `---`.
 
 **If issues found:** Send specific, actionable feedback to the writer. Maximum 2 revision rounds. If the second revision still has minor issues, fix them directly yourself rather than sending a third round.
 
