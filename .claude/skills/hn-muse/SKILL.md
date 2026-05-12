@@ -14,8 +14,10 @@ Before spawning the writer, decide the scope for this run.
 Use Glob on `src/content/posts/*.md` to get the 4 most recent posts (by date in filename). For each, count the words in the body (excluding frontmatter). A one-liner that works:
 
 ```bash
-for f in $(ls -t src/content/posts/*.md | head -4); do echo "$f $(awk '/^---$/{c++; next} c==2{print}' "$f" | wc -w)"; done
+for f in $(ls -t src/content/posts/*.md | head -4); do echo "$f $(awk 'BEGIN{c=0} /^---$/ && c<2 {c++; next} c==2 {print}' "$f" | wc -w)"; done
 ```
+
+The `c<2` guard matters: it only treats the first two `---` lines as frontmatter delimiters, so `---` separators inside the body (e.g. between sections of an advice column or letter) are counted as body, not mistaken for a new frontmatter block. The naive version `/^---$/{c++; next} c==2{print}` undercounts severely on posts with body separators.
 
 If ALL 4 bodies are over 300 words, the corpus has piled up into long-form territory and the writer needs explicit permission to write small.
 
