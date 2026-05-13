@@ -42,7 +42,7 @@ Batch these curl calls efficiently — fetch multiple items in parallel using `&
 
 ## Step 2: Filter Out Previously Used Stories
 
-Use Glob to list files matching `src/content/posts/*.md`. Read only the **frontmatter** of the most recent post (by date in filename) and extract all `hn_url` values from its `sources` — these contain HN story IDs in the format `https://news.ycombinator.com/item?id=STORY_ID`.
+Get the most recent post by date in the filename. Use `ls src/content/posts/*.md | sort -r | head -1` — NOT Glob and NOT `ls -t`, both of which sort by mtime and return arbitrary order when files share a timestamp (which they do after a fresh git checkout). Read only the **frontmatter** of that post and extract all `hn_url` values from its `sources` — these contain HN story IDs in the format `https://news.ycombinator.com/item?id=STORY_ID`.
 
 Build an exclusion set of those story IDs. Skip any story whose ID appears in this set during curation.
 
@@ -110,7 +110,7 @@ These are exemplars of *range*, not templates to copy. Today's post might invent
 
 Before you settle on a direction, you must check what the recent posts have been doing — so you don't continue a pattern by accident.
 
-Use Glob to list `src/content/posts/*.md` and pick the **3 most recent** by date in filename. For each, read ONLY the frontmatter (you are still forbidden from reading the body or `ai_notes` of past posts). Note:
+Get the **3 most recent** posts by filename date: `ls src/content/posts/*.md | sort -r | head -3` (not Glob, not `ls -t` — both sort by mtime and fail on ties). For each, read ONLY the frontmatter (you are still forbidden from reading the body or `ai_notes` of past posts). Note:
 
 - The `format` field of each
 - The `description` field of each (this gives you a flavor of tone without reading the post)

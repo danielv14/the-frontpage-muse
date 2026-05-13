@@ -11,13 +11,16 @@ When this skill is invoked, execute the ENTIRE pipeline below. No pauses, no ask
 
 Before spawning the writer, decide the scope for this run.
 
-Use Glob on `src/content/posts/*.md` to get the 4 most recent posts (by date in filename). For each, count the words in the body (excluding frontmatter). A one-liner that works:
+Get the 4 most recent posts **by date in the filename** (NOT by mtime — git checkouts give all files the same timestamp, so `ls -t` and Glob both return arbitrary order on ties). For each, count the words in the body (excluding frontmatter). A one-liner that works:
 
 ```bash
-for f in $(ls -t src/content/posts/*.md | head -4); do echo "$f $(awk 'BEGIN{c=0} /^---$/ && c<2 {c++; next} c==2 {print}' "$f" | wc -w)"; done
+for f in $(ls src/content/posts/*.md | sort -r | head -4); do echo "$f $(awk 'BEGIN{c=0} /^---$/ && c<2 {c++; next} c==2 {print}' "$f" | wc -w)"; done
 ```
 
-The `c<2` guard matters: it only treats the first two `---` lines as frontmatter delimiters, so `---` separators inside the body (e.g. between sections of an advice column or letter) are counted as body, not mistaken for a new frontmatter block. The naive version `/^---$/{c++; next} c==2{print}` undercounts severely on posts with body separators.
+Two things matter here:
+
+1. **`ls | sort -r`, not `ls -t`.** Filenames begin with `YYYY-MM-DD`, so reverse-lexical sort = reverse-chronological. `ls -t` is unreliable in this repo because all files often share an mtime.
+2. **The `c<2` guard in the awk script.** It only treats the first two `---` lines as frontmatter delimiters, so `---` separators inside the body (e.g. between sections of an advice column or letter) are counted as body, not mistaken for a new frontmatter block. The naive version `/^---$/{c++; next} c==2{print}` undercounts severely on posts with body separators.
 
 If ALL 4 bodies are over 300 words, the corpus has piled up into long-form territory and the writer needs explicit permission to write small.
 
@@ -46,7 +49,7 @@ The writer will scrape HN, deep-read articles and comments, then send you a crea
 
 Evaluate the pitch:
 
-- **Format freshness:** Use Glob on `src/content/posts/*.md` and read the frontmatter `format` field of the **3 most recent** posts. If the pitch's proposed format appears in that list, redirect by default. The rule is general — no special case per format. The override bar is high: only accept a repeat if the writer has articulated something specific in the material that genuinely requires this exact format and no other could carry it. "It fits" is not enough. The window is intentionally short (3 posts, not a whole week) so the writer isn't forced to invent exotic formats just because something natural appeared six days ago.
+- **Format freshness:** Get the **3 most recent** posts the same way as Phase 0 (`ls src/content/posts/*.md | sort -r | head -3` — by filename date, not mtime) and read each one's frontmatter `format` field. If the pitch's proposed format appears in that list, redirect by default. The rule is general — no special case per format. The override bar is high: only accept a repeat if the writer has articulated something specific in the material that genuinely requires this exact format and no other could carry it. "It fits" is not enough. The window is intentionally short (3 posts, not a whole week) so the writer isn't forced to invent exotic formats just because something natural appeared six days ago.
 - **Tonal freshness:** Read the `description` field of the 3 most recent posts (one line each — fast). If they share an obvious register (melancholic, introspective, sarcastic, elegiac, rueful), and the pitch reads as a continuation of that register, redirect. Tell the writer specifically which register has dominated and suggest a contrasting one (anger, joy, absurdity, technical sharpness, dry comedy, plain reportage). The corpus's largest single failure mode is elegiac-by-default; weight your suspicion accordingly.
 - **Title freshness:** If the working title starts with `The <abstract noun>` or `What <verb-phrase>`, scrutinize. Many recent posts share that pattern. Suggest something more concrete, more declarative, or more openly strange.
 - **Creative interest:** Is the direction surprising, original, worth reading? Would you want to read this?
