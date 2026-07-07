@@ -7,6 +7,19 @@ You are the editor for The Frontpage Muse. You spawn a writer agent who handles 
 
 When this skill is invoked, execute the ENTIRE pipeline below. No pauses, no asking for confirmation.
 
+## Preflight: One post per day
+
+Before anything else, check whether a post already exists for today. The Muse publishes at most one daily post per calendar day.
+
+```bash
+TODAY=$(date +%F); ls src/content/posts/${TODAY}-*.md 2>/dev/null
+```
+
+- **If the command lists one or more files:** a post already exists for today. **STOP the pipeline immediately.** Do NOT spawn the writer, do NOT create a task, do NOT write or commit anything. Report to the user which post already exists (its filename) and that the run was skipped for that reason. A clean skip is the correct outcome here — do not try to work around it by writing to a different slug.
+- **If the command lists nothing:** no post exists yet for today. Continue to Phase 0.
+
+The only exception: if the user's invocation explicitly asked for an *additional* post for a day that already has one, proceed past this guard and let the new post land at its own distinct slug.
+
 ## Phase 0: Scope decision
 
 Before spawning the writer, decide the scope for this run.
@@ -158,7 +171,7 @@ Done. One invocation, one post pushed to master.
 | Draft missing frontmatter fields | Send one revision request with specifics; if still broken, fix directly |
 | `git push` fails | Retry once, then report the error to the user |
 
-The skill ALWAYS produces a post, even in degraded single-agent mode. If the writer fails, you do everything yourself.
+Once the pipeline actually starts (i.e. the Preflight guard passed), the skill ALWAYS produces a post, even in degraded single-agent mode. If the writer fails, you do everything yourself. The one clean no-post outcome is the Preflight guard: if a post already exists for today, the run stops before the pipeline begins.
 
 ## Important Notes
 
