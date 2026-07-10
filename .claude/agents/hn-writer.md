@@ -24,7 +24,32 @@ If no scope block is present, default to standard.
 
 ## Step 1: Scrape the Hacker News Frontpage
 
-Use Bash with curl to fetch from the HN Firebase API.
+There are two legit, free, no-auth sources for **live** front-page data. Both are sanctioned by HN itself. Prefer the Algolia Search API (fewer requests, richer payloads) and keep the Firebase API as a fallback if Algolia is unreachable.
+
+> **Both APIs must reflect the front page *right now*.** Never query in a way that surfaces historically popular stories — Algolia indexes all of HN history, so a plain relevance/points-sorted search with no date window will return months-old "greatest hits", not today's front page. The query patterns below are chosen specifically to avoid that. If you ever see stories dated weeks or months ago in your results, you have used the wrong query — stop and switch to the time-sorted `front_page` pattern.
+
+### Preferred: Algolia HN Search API (`hn.algolia.com/api/v1`)
+
+This is the same backend that powers the official HN search at [hn.algolia.com](https://hn.algolia.com). It is a genuine third-party service (run by Algolia in partnership with Y Combinator), free, keyless, and unthrottled.
+
+Fetch the current front page — time-sorted so you get *today's* stories, not old ones — in a single request:
+```
+curl -s 'https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=30'
+```
+
+This returns a `hits` array. Each hit has: `objectID` (the HN story ID), `title`, `url`, `author`, `points`, `num_comments`, `created_at_i` (unix timestamp), and `_tags`. That one call replaces the Firebase "top IDs + one fetch per item" dance for all 30 stories.
+
+**Sanity-check freshness:** every hit's `created_at_i` should be within roughly the last day or two. If any are much older, you are not looking at the live front page — discard and refetch with the query above.
+
+For the comments of a chosen story, fetch the whole nested thread in one request (no per-comment fan-out):
+```
+curl -s 'https://hn.algolia.com/api/v1/items/{objectID}'
+```
+This returns the story with a recursively nested `children` array; each node has `id`, `author`, `text` (HTML), `created_at_i`, and its own `children`. Walk 2–3 levels deep and cap at ~20 comments per story (see Step 4).
+
+### Fallback: official HN Firebase API (`hacker-news.firebaseio.com/v0`)
+
+Use this only if the Algolia API fails. It is the official, real-time API but costs one request per item.
 
 Fetch the top story IDs:
 ```
@@ -39,6 +64,8 @@ curl -s 'https://hacker-news.firebaseio.com/v0/item/{id}.json'
 Each story object has: `id`, `title`, `url`, `score`, `by`, `time`, `descendants` (comment count), `kids` (top-level comment IDs).
 
 Batch these curl calls efficiently — fetch multiple items in parallel using `&` and `wait` in a single Bash call, or fetch them in groups.
+
+> **Network note:** some sandboxed/remote environments enforce an egress allowlist that blocks `hacker-news.firebaseio.com`, `hn.algolia.com`, and `news.ycombinator.com` outright (CONNECT → 403). If every HN request fails with a 403 tunnel error, this is an environment policy, not an API outage — do not burn retries on it. Report the blocked hosts to the editor and stop; the pipeline cannot scrape HN from that environment.
 
 ## Step 2: Filter Out Previously Used Stories
 
@@ -75,13 +102,18 @@ Use WebFetch to read the linked article URL. Read to **absorb**, not to extract.
 - If a WebFetch call fails or returns an error, move on immediately. Do not retry article fetches — the HN comments are often more valuable than the article anyway.
 
 **Fetch HN comments:**
-Use the story's `kids` array to fetch top-level comments. For each top-level comment, also fetch their `kids` (replies) to get 2-3 levels of discussion depth. Limit to roughly 20 comments per story.
+Preferred — one request gets the whole nested thread via the Algolia API:
+```
+curl -s 'https://hn.algolia.com/api/v1/items/{objectID}'
+```
+Walk the recursive `children` array 2–3 levels deep and limit to roughly 20 comments per story. Each node has `id`, `author`, `text` (HTML), `created_at_i`, and its own `children`.
 
+Fallback (Firebase) — if you scraped via Firebase in Step 1, use the story's `kids` array to fetch top-level comments, then each comment's `kids` (replies) for 2–3 levels of depth, capping at ~20 comments per story:
 ```
 curl -s 'https://hacker-news.firebaseio.com/v0/item/{comment_id}.json'
 ```
 
-Comment objects have: `id`, `by`, `text` (HTML), `kids` (reply IDs), `parent`, `time`.
+Firebase comment objects have: `id`, `by`, `text` (HTML), `kids` (reply IDs), `parent`, `time`.
 
 Pay attention to:
 - Insightful counterarguments

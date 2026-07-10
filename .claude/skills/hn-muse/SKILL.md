@@ -20,6 +20,24 @@ TODAY=$(date +%F); ls src/content/posts/${TODAY}-*.md 2>/dev/null
 
 The only exception: if the user's invocation explicitly asked for an *additional* post for a day that already has one, proceed past this guard and let the new post land at its own distinct slug.
 
+## Preflight: HN reachability (environment matters)
+
+The whole pipeline depends on reaching Hacker News. Whether you can reach it **depends on where this skill is running**, and the two environments behave differently:
+
+- **On the user's own machine (local Claude Code):** outbound network is open. `hacker-news.firebaseio.com` and `hn.algolia.com` are reachable, and the pipeline runs end-to-end as written. This is the normal case.
+- **In a remote/sandboxed session (e.g. Claude Code on the web or mobile):** outbound HTTPS goes through a policy-enforcing egress proxy with an *allowlist*. HN hosts are frequently **not** on that allowlist, so every request to them fails with a `403` CONNECT-tunnel denial (via both `curl` and WebFetch). This is an environment policy, not an API outage or a transient error.
+
+Before spawning the writer, probe reachability once so you fail fast instead of watching the writer burn its whole run on blocked requests:
+
+```bash
+curl -sS -o /dev/null -w "%{http_code}\n" --max-time 15 'https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=1' 2>&1
+```
+
+- **A `200` (or any real HTTP response):** HN is reachable. Continue to Phase 0.
+- **A `403` tunnel failure / exit code 56 / empty output:** HN is blocked in this environment. **STOP the pipeline and report cleanly to the user** — name the blocked host, explain it is this session's egress policy (not a bug), and note that the skill works normally on their local machine. Do NOT retry, do NOT route around it, and do NOT fall back to writing a post from memory (see Error Handling — a fabricated post with invented sources is never acceptable). A clean, explained skip is the correct outcome here.
+
+If the check is inconclusive (e.g. the proxy itself errors), you may proceed and let the writer's own reachability handling in Step 1 catch it.
+
 ## Phase 0: Scope decision
 
 Before spawning the writer, decide the scope for this run.
@@ -111,6 +129,7 @@ Read the file and validate:
 
 **Content checklist:**
 - [ ] Sources reference real stories (URLs and story IDs look plausible)
+- [ ] **Source freshness** — the sources must be from *today's* front page, not old high-scoring stories. The writer pulls from the Algolia `front_page` API using the time-sorted `search_by_date` query, which returns the live front page (see the writer agent's Step 1); a points-sorted or date-unfiltered query would surface months-old "greatest hits" instead. Spot-check it: the story IDs in each `hn_url` should be large/recent, and if you have any doubt, resolve one against `https://hn.algolia.com/api/v1/items/{STORY_ID}` and confirm its `created_at_i` is within the last day or two. If the sources look stale (old front pages), send it back — a post built on last month's front page defeats the point.
 - [ ] Content is original — not a summary, listicle, or "one section per source" structure in a creative costume
 - [ ] The post has its own center — a thesis, observation, claim, story, position, or concrete artifact. NOT just a creative frame around article summaries. A technical or argumentative post with a clear stance passes; a piece that "ruminates on a theme" without arriving anywhere does not.
 - [ ] Tone matches the `tonal_statement` and breaks from the recent run. If the post claims to be "angry" or "absurd" but reads as the same elegiac register as the past week, send it back.
@@ -129,7 +148,7 @@ If the scope is `micro`, apply these adjustments to the checklists above:
 - **Tags:** Optional, not required.
 - **ai_notes:** Each of `story_selection`, `creative_approach`, and `tonal_statement` may be a single sentence. The `tonal_statement` is still required and must explicitly name how this post's tone differs from the recent 3.
 - **Checks that do NOT apply:** the "post has its own center" check, the 1:1 mapping test, and the "structural blending" expectation. A micro piece can be a single image, a single sentence, or a poem with no thesis.
-- **Checks that still apply:** real sources, English language, tone matches `tonal_statement` and shifts register, no excessive `---`.
+- **Checks that still apply:** real sources, **source freshness** (today's front page, not old stories — see the content checklist), English language, tone matches `tonal_statement` and shifts register, no excessive `---`.
 
 **If issues found:** Send specific, actionable feedback to the writer. Maximum 2 revision rounds. If the second revision still has minor issues, fix them directly yourself rather than sending a third round.
 
@@ -170,8 +189,9 @@ Done. One invocation, one post pushed to master.
 | Writer never sends draft after pitch approval (3+ idle notifications) | Same as above — shut down and write it yourself |
 | Draft missing frontmatter fields | Send one revision request with specifics; if still broken, fix directly |
 | `git push` fails | Retry once, then report the error to the user |
+| HN hosts return `403` / tunnel failure (egress policy blocks them) | STOP and report cleanly — see the HN-reachability preflight. This is an environment policy, not a transient error. Never fabricate a post from memory to work around it. |
 
-Once the pipeline actually starts (i.e. the Preflight guard passed), the skill ALWAYS produces a post, even in degraded single-agent mode. If the writer fails, you do everything yourself. The one clean no-post outcome is the Preflight guard: if a post already exists for today, the run stops before the pipeline begins.
+Once the pipeline actually starts (i.e. both preflights passed), the skill ALWAYS produces a post, even in degraded single-agent mode. If the writer fails for any reason *other than* network, you do everything yourself. There are exactly **two** clean no-post outcomes, both caught in preflight before the pipeline begins: (1) a post already exists for today, or (2) HN is unreachable from this environment. Degraded single-agent mode is for a *misbehaving writer* on a machine that *can* reach HN — it never means inventing stories, URLs, or comments from memory. A post with fabricated sources is worse than no post.
 
 ## Important Notes
 
