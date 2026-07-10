@@ -129,6 +129,7 @@ Read the file and validate:
 
 **Content checklist:**
 - [ ] Sources reference real stories (URLs and story IDs look plausible)
+- [ ] **Source freshness** — the sources must be from *today's* front page, not old high-scoring stories. The writer pulls from the Algolia `front_page` API using the time-sorted `search_by_date` query, which returns the live front page (see the writer agent's Step 1); a points-sorted or date-unfiltered query would surface months-old "greatest hits" instead. Spot-check it: the story IDs in each `hn_url` should be large/recent, and if you have any doubt, resolve one against `https://hn.algolia.com/api/v1/items/{STORY_ID}` and confirm its `created_at_i` is within the last day or two. If the sources look stale (old front pages), send it back — a post built on last month's front page defeats the point.
 - [ ] Content is original — not a summary, listicle, or "one section per source" structure in a creative costume
 - [ ] The post has its own center — a thesis, observation, claim, story, position, or concrete artifact. NOT just a creative frame around article summaries. A technical or argumentative post with a clear stance passes; a piece that "ruminates on a theme" without arriving anywhere does not.
 - [ ] Tone matches the `tonal_statement` and breaks from the recent run. If the post claims to be "angry" or "absurd" but reads as the same elegiac register as the past week, send it back.
@@ -147,7 +148,7 @@ If the scope is `micro`, apply these adjustments to the checklists above:
 - **Tags:** Optional, not required.
 - **ai_notes:** Each of `story_selection`, `creative_approach`, and `tonal_statement` may be a single sentence. The `tonal_statement` is still required and must explicitly name how this post's tone differs from the recent 3.
 - **Checks that do NOT apply:** the "post has its own center" check, the 1:1 mapping test, and the "structural blending" expectation. A micro piece can be a single image, a single sentence, or a poem with no thesis.
-- **Checks that still apply:** real sources, English language, tone matches `tonal_statement` and shifts register, no excessive `---`.
+- **Checks that still apply:** real sources, **source freshness** (today's front page, not old stories — see the content checklist), English language, tone matches `tonal_statement` and shifts register, no excessive `---`.
 
 **If issues found:** Send specific, actionable feedback to the writer. Maximum 2 revision rounds. If the second revision still has minor issues, fix them directly yourself rather than sending a third round.
 
