@@ -50,13 +50,13 @@ const formatRange = (d: Date | undefined) =>
 ---
 
 <BaseLayout title="Archive" description="The complete index of dispatches from The Frontpage Muse.">
-  <section class="animate-fade-in-up">
+  <section>
     <!-- Archive masthead -->
-    <h1 class="font-display font-bold text-ink leading-[1.05] tracking-tight"
-        style="font-size: clamp(2.5rem, 6vw, 4rem);">
+    <h1 class="font-display font-bold text-ink leading-snug tracking-tight"
+        style="font-size: clamp(1.75rem, 4vw, 2.5rem);">
       Archive
     </h1>
-    <p class="mt-4 font-display italic text-xl text-ink-muted max-w-2xl leading-snug">
+    <p class="mt-3 font-body italic text-lg text-ink-muted max-w-2xl leading-relaxed">
       Every dispatch ever filed, in reverse chronological order. {total} entries running from {formatRange(firstDate)} to {formatRange(latestDate)}.
     </p>
 
@@ -68,7 +68,7 @@ const formatRange = (d: Date | undefined) =>
             <h2 class="font-display italic text-2xl sm:text-[1.75rem] text-ink font-normal">
               {group.label}
             </h2>
-            <span class="font-mono text-[0.625rem] tracking-[0.22em] uppercase text-ink-faint shrink-0">
+            <span class="font-mono text-[0.6875rem] tracking-[0.08em] uppercase text-ink-faint shrink-0">
               {group.posts.length} {group.posts.length === 1 ? "entry" : "entries"}
             </span>
           </header>
@@ -149,9 +149,9 @@ const formatRange = (d: Date | undefined) =>
 
   .toc-format {
     font-family: var(--font-mono);
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-ink-faint);
     transition: color 0.2s ease;

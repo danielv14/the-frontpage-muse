@@ -16,18 +16,18 @@ const hasMore = sortedPosts.length > 6;
 
 <BaseLayout>
   <!-- Lede / editor's note -->
-  <section class="mb-14 animate-fade-in-up">
-    <p class="font-display text-2xl sm:text-3xl text-ink leading-[1.25] italic font-normal max-w-2xl">
+  <section class="mb-10">
+    <p class="font-body text-lg text-ink leading-relaxed max-w-2xl">
       Every day, a thousand stories wash through the orange river of Hacker News. Most of them are gone by morning. We fish out the interesting ones and make something new.
     </p>
-    <p class="mt-5 font-body text-lg text-ink-muted leading-relaxed max-w-2xl">
+    <p class="mt-3 font-body text-base text-ink-muted leading-relaxed max-w-2xl">
       A poem. A satire. A limerick. An essay. Whatever the material demands. This is not a summary bot. It is an editorial experiment in artificial attention.
     </p>
   </section>
 
   <!-- Hero post -->
   {heroPost && (
-    <section class="animate-fade-in-up" style="animation-delay: 0.08s;">
+    <section>
       <PostCard
         title={heroPost.data.title}
         description={heroPost.data.description}
@@ -42,7 +42,7 @@ const hasMore = sortedPosts.length > 6;
 
   <!-- Recent dispatches -->
   {followupPosts.length > 0 && (
-    <section class="mt-12 animate-fade-in-up" style="animation-delay: 0.16s;">
+    <section class="mt-12">
       <div class="flex items-baseline justify-between mb-4 pt-6 border-t border-rule">
         <h2 class="font-display italic text-xl text-ink-muted font-normal">
           More dispatches
@@ -67,12 +67,8 @@ const hasMore = sortedPosts.length > 6;
       </div>
       {hasMore && (
         <div class="mt-8 flex justify-center">
-          <a
-            href="/posts"
-            class="archive-button"
-          >
-            <span>Browse the archive</span>
-            <span class="arrow">→</span>
+          <a href="/posts" class="nav-link-inline">
+            Browse the archive →
           </a>
         </div>
       )}
@@ -84,39 +80,13 @@ const hasMore = sortedPosts.length > 6;
   .nav-link-inline {
     font-family: var(--font-mono);
     font-size: 0.6875rem;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--color-ink-faint);
+    color: var(--color-ink-muted);
     text-decoration: none;
     transition: color 0.2s ease;
   }
   .nav-link-inline:hover {
     color: var(--color-accent);
-  }
-
-  .archive-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--color-ink);
-    text-decoration: none;
-    padding: 0.875rem 1.5rem;
-    border: 1px solid var(--color-ink);
-    background: transparent;
-    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-  }
-  .archive-button:hover {
-    background: var(--color-ink);
-    color: var(--color-paper);
-  }
-  .archive-button .arrow {
-    transition: transform 0.25s cubic-bezier(0.65, 0, 0.35, 1);
-  }
-  .archive-button:hover .arrow {
-    transform: translateX(4px);
   }
 </style>

@@ -41,7 +41,7 @@ const fullDate = formatDate(post.data.date).toUpperCase();
   publishedDate={post.data.date}
   tags={post.data.tags}
 >
-  <article class="animate-fade-in-up">
+  <article>
     <!-- Post header -->
     <header class="mb-10">
       <!-- Issue line -->
@@ -56,16 +56,16 @@ const fullDate = formatDate(post.data.date).toUpperCase();
       </div>
 
       <!-- Format chip -->
-      <div class="kicker mt-6">{format}</div>
+      <div class="kicker mt-5">{format}</div>
 
       <!-- Title -->
-      <h1 class="font-display font-bold text-ink leading-[1.05] tracking-tight mt-3"
-          style="font-size: clamp(2rem, 5vw, 3.25rem);">
+      <h1 class="font-display font-bold text-ink leading-snug tracking-tight mt-3"
+          style="font-size: clamp(1.75rem, 4vw, 2.5rem);">
         {post.data.title}
       </h1>
 
       <!-- Dek / standfirst -->
-      <p class="mt-5 font-display italic text-xl sm:text-2xl text-ink-muted leading-snug max-w-2xl font-normal">
+      <p class="mt-4 font-body italic text-lg sm:text-xl text-ink-muted leading-relaxed max-w-2xl">
         {post.data.description}
       </p>
 
@@ -83,9 +83,7 @@ const fullDate = formatDate(post.data.date).toUpperCase();
         </details>
       )}
 
-      <div class="ornament mt-10">
-        <span class="ornament-glyph">§</span>
-      </div>
+      <div class="ornament mt-8"></div>
     </header>
 
     <!-- Post content -->
@@ -96,16 +94,14 @@ const fullDate = formatDate(post.data.date).toUpperCase();
     <!-- Sources -->
     {post.data.sources && post.data.sources.length > 0 && (
       <footer class="mt-14">
-        <div class="ornament">
-          <span class="ornament-glyph">❦</span>
-        </div>
+        <div class="ornament"></div>
         <h2 class="font-display italic text-xl text-ink-muted font-normal mb-3">Sources</h2>
         <ul class="space-y-2.5">
           {post.data.sources.map((source: { title: string; url: string; hn_url: string }) => (
             <li class="text-base font-body leading-snug">
               <a
                 href={source.url}
-                class="link-draw !text-accent"
+                class="link-draw text-ink"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -114,7 +110,7 @@ const fullDate = formatDate(post.data.date).toUpperCase();
               <span class="text-rule mx-2">·</span>
               <a
                 href={source.hn_url}
-                class="text-ink-faint hover:text-accent font-mono text-[0.6875rem] tracking-[0.15em] uppercase transition-colors"
+                class="text-ink-faint hover:text-accent font-mono text-[0.6875rem] tracking-[0.08em] uppercase transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -130,9 +126,9 @@ const fullDate = formatDate(post.data.date).toUpperCase();
     <div class="mt-12 pt-6 border-t border-rule">
       <a
         href="/"
-        class="inline-flex items-center gap-2 font-mono text-[0.6875rem] tracking-[0.2em] uppercase text-ink-muted hover:text-accent transition-colors"
+        class="inline-flex items-center gap-2 font-mono text-[0.6875rem] tracking-[0.08em] uppercase text-ink-muted hover:text-accent transition-colors"
       >
-        <span class="back-arrow inline-block transition-transform">←</span>
+        <span>←</span>
         Back to the front page
       </a>
     </div>
@@ -167,8 +163,5 @@ const fullDate = formatDate(post.data.date).toUpperCase();
   }
   details[open] .curtain-arrow {
     transform: rotate(45deg);
-  }
-  a:hover .back-arrow {
-    transform: translateX(-4px);
   }
 </style>
