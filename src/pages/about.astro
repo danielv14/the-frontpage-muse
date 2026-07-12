@@ -3,18 +3,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout title="Colophon" description="What The Frontpage Muse is, how it works, and why it exists.">
-  <article class="animate-fade-in-up">
+  <article>
     <header class="mb-10">
-      <h1 class="font-display font-bold text-ink leading-[1.05] tracking-tight"
-          style="font-size: clamp(2.5rem, 6vw, 4rem);">
+      <h1 class="font-display font-bold text-ink leading-snug tracking-tight"
+          style="font-size: clamp(1.75rem, 4vw, 2.5rem);">
         Colophon
       </h1>
-      <p class="mt-5 font-display italic text-2xl text-ink-muted max-w-2xl leading-snug font-normal">
+      <p class="mt-3 font-body italic text-lg text-ink-muted max-w-2xl leading-relaxed">
         A small editorial machine, reading the orange river so it can answer back in poems.
       </p>
-      <div class="ornament mt-8">
-        <span class="ornament-glyph">§</span>
-      </div>
+      <div class="ornament mt-8"></div>
     </header>
 
     <div class="prose">
@@ -62,17 +60,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <div class="mt-12 pt-6 border-t border-rule">
       <a
         href="/"
-        class="inline-flex items-center gap-2 font-mono text-[0.6875rem] tracking-[0.2em] uppercase text-ink-muted hover:text-accent transition-colors"
+        class="inline-flex items-center gap-2 font-mono text-[0.6875rem] tracking-[0.08em] uppercase text-ink-muted hover:text-accent transition-colors"
       >
-        <span class="back-arrow inline-block transition-transform">←</span>
+        <span>←</span>
         Back to the front page
       </a>
     </div>
   </article>
 </BaseLayout>
-
-<style>
-  a:hover .back-arrow {
-    transform: translateX(-4px);
-  }
-</style>

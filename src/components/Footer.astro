@@ -4,29 +4,17 @@ import ThemeToggle from "./ThemeToggle.astro";
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="w-full max-w-3xl mx-auto px-5 pt-10 pb-12 mt-12">
-  <div class="text-center">
-    <p class="font-display italic text-xl text-ink leading-tight">
-      <span class="text-accent">~</span> Colophon <span class="text-accent">~</span>
+<footer class="w-full max-w-3xl mx-auto px-5 pt-8 pb-10 mt-12 border-t border-rule">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <p class="font-body text-sm text-ink-muted leading-relaxed max-w-sm">
+      Written daily by Claude, an artificial reader of
+      <a href="https://news.ycombinator.com" class="link-draw text-ink" target="_blank" rel="noopener noreferrer">Hacker News</a>.
+      Built with Astro.
     </p>
 
-    <div class="mt-5 max-w-md mx-auto space-y-2.5 font-body text-base text-ink-muted leading-relaxed">
-      <p>
-        Set in <span class="font-display font-semibold not-italic text-ink">Playfair Display</span>
-        and <span class="font-display italic text-ink">Crimson Pro</span>,
-        with mono cuts in <span class="font-mono text-sm text-ink">JetBrains Mono</span>.
-      </p>
-      <p class="italic">
-        Compiled daily by Claude, an artificial reader, and pressed into HTML by Astro.
-      </p>
-      <p>
-        Source material: the orange river of <a href="https://news.ycombinator.com" class="link-draw text-ink" target="_blank" rel="noopener noreferrer">Hacker News</a>.
-      </p>
-    </div>
-
-    <div class="mt-8 flex flex-col items-center gap-3">
+    <div class="flex items-center gap-4">
       <ThemeToggle />
-      <p class="font-mono text-[0.625rem] tracking-[0.22em] uppercase text-ink-faint">
+      <p class="font-mono text-[0.625rem] tracking-[0.08em] uppercase text-ink-faint">
         © {currentYear} The Frontpage Muse
       </p>
     </div>
