@@ -1,6 +1,7 @@
 ---
 name: hn-muse-magazine
 description: Orchestrate a writer agent to read the daily posts since the last magazine issue, find one thread, and publish a new magazine issue. Run ad-hoc, whenever there is enough corpus to draw from.
+disable-model-invocation: true
 ---
 
 You are the editor for The Frontpage Muse Magazine. You spawn a writer agent who handles research and writing. You provide editorial oversight — reviewing the creative pitch and the final draft before publishing.
@@ -11,15 +12,17 @@ There is no fixed cadence. The skill is run ad-hoc. Each issue covers everything
 
 When this skill is invoked, execute the ENTIRE pipeline below. No pauses, no asking for confirmation.
 
+First, read `.claude/skills/hn-muse/reference.md` — the shared reference for both Muse pipelines. For this skill the load-bearing sections are the `format` field rules, *a recap in costume*, and the writer-handshake reliability rules.
+
 ## Phase 1: Setup
 
-1. Use `TeamCreate` with name `hn-muse-magazine-YYYY-MM-DD` (using today's date)
-2. Create a task for the writer: "Read corpus, find thread, propose creative direction, write draft"
-3. Spawn the writer agent:
-   - `subagent_type: "hn-magazine-writer"`
-   - `team_name: "hn-muse-magazine-YYYY-MM-DD"`
-   - `name: "writer"`
-   - Prompt: "You are the Muse's magazine editor-in-residence. Check TaskList, claim your task, and execute your full pipeline — read the corpus, find the thread, then send me your creative pitch before writing."
+Spawn the writer agent with the Agent tool:
+
+- `subagent_type: "hn-magazine-writer"`
+- `name: "writer"`
+- Prompt: "You are the Muse's magazine editor-in-residence. Execute your full pipeline — read the corpus, find the thread, then send me your creative pitch before writing."
+
+The writer runs in the background and reports back via messages. From this point on, the handshake reliability rules in the reference file are in force: lifecycle signals are unreliable, the filesystem is the ground truth, and you verify completion claims by globbing the date under `src/content/magazines/`.
 
 ## Phase 2: Review Creative Pitch (or Abort Message)
 
@@ -40,8 +43,7 @@ If the writer sent a pitch instead, evaluate it:
 
 - **Thread, not survey:** Does the pitch describe ONE observation, motif, or thread that runs across the corpus? Or does it describe a list of themes? If it's a list, redirect.
 - **Thread is corpus-level:** Could the same observation have been made about a single daily post? If yes, the writer hasn't found the right thread. Push back.
-- **Format freshness:** Read the most recent magazine's `format` field yourself. If the pitch repeats it, redirect to a different form.
-- **Format taboo on `dispatch`:** This is a meta publication, but `dispatch` (editor's note framing) is overused if it appears more than once a quarter. Push back if the pitch picks `dispatch` and the previous issue was anything in the editorial family (`editorial`, `letter`, `dispatch`).
+- **Format taboo:** Read the most recent magazine's `format` field yourself. If the pitch repeats it, redirect to a different form. Additionally for `dispatch` (editor's note framing): it is overused if it appears more than once a quarter, so push back if the pitch picks `dispatch` and the previous issue was anything in the editorial family (`editorial`, `letter`, `dispatch`).
 - **Structural independence:** Does the pitch lead with what the piece is *about*, or with which posts it *contains*? If the pitch is essentially "I'll write about these N posts in form X", redirect — the writer must lead with the thread.
 - **Creative interest:** Is this surprising? Worth reading? Would a reader who never saw any of the daily posts still want to read this?
 
@@ -63,7 +65,7 @@ Be specific. Name the posts. The single most important editorial intervention yo
 
 ## Phase 3: Review Draft
 
-The writer will notify you that the draft is ready at `src/content/magazines/YYYY-MM-DD-slug.md`.
+The writer will notify you that the draft is ready. Verify the file actually exists on disk with `ls src/content/magazines/$(date +%F)-*.md` — per the handshake rules, never trust the reported path.
 
 Read the file and validate:
 
@@ -72,16 +74,15 @@ Read the file and validate:
 - [ ] `description` — teaser, not summary
 - [ ] `date` — today's date
 - [ ] `coverage.start` and `coverage.end` — match the actual corpus window the writer read
-- [ ] `format` — REQUIRED. Lowercase, hyphen-separated, 2-24 chars. Must NOT match the most recent magazine's `format`. Names the FORM, not the theme.
+- [ ] `format` — REQUIRED, per the reference file's `format` rules. Must NOT match the most recent magazine's `format`.
 - [ ] `referenced_posts` — array with `slug`, `title`, `date` for each post in the corpus. Slugs must match real files in `src/content/posts/`.
 - [ ] `tags` — present (2-5 tags) describing themes, NOT format
 - [ ] `ai_notes` with `story_selection` and `creative_approach` using `>-` syntax
 
 **Content checklist:**
 - [ ] Referenced posts are real (you can spot-check by reading frontmatter of one or two)
-- [ ] Content is original — not a recap, not a "here's the period in review", not a one-paragraph-per-post structure in a creative costume
+- [ ] Content is not a recap in costume (defined in the reference file) — no "here's the period in review", no one-paragraph-per-post structure
 - [ ] The piece has its own thesis, observation, or thread — visible without needing the daily posts as context
-- [ ] No 1:1 mapping between sections and posts
 - [ ] No excessive `---` horizontal rules
 - [ ] No editor's sign-off in the body (the template renders one). The body should end on its last line of prose.
 - [ ] English language
@@ -89,7 +90,7 @@ Read the file and validate:
 
 **The litmus test (apply yourself):** Mentally remove every reference to a specific post, every quoted line, every direct mention. Is there still a piece of writing here? If what remains is just a creative frame with nothing inside it, send the draft back.
 
-**If issues found:** Send specific, actionable feedback. Maximum 2 revision rounds. If a third revision is still off, fix the small stuff yourself.
+**If issues found:** Send specific, actionable feedback. Maximum 2 revision rounds. If a third revision is still off, fix the small stuff yourself — per the handshake rules, tell the writer to stand down first and re-read the file immediately before editing.
 
 **If the draft is good:** Move to Phase 4.
 
@@ -115,27 +116,27 @@ git push origin master
 
 ## Phase 5: Cleanup
 
-1. Send a shutdown request to the writer
-2. Once the writer has shut down, use `TeamDelete` to clean up the team
+Send the writer a brief stand-down message. If its task keeps running after that, stop it with `TaskStop`.
 
 Done. One invocation, one issue published.
 
 ## Error Handling & Fallback
 
+The handshake reliability rules in the reference file govern every writer-failure judgment below — especially: a termination signal is not proof of death, completion claims are verified on disk, and you nudge once before taking over.
+
 | Situation | Response |
 |---|---|
-| Writer aborts at the substance gate (too few posts, monoculture, no genuine thread) | Accept the writer's judgment. Skip Phase 3 and Phase 4. Notify the user with the writer's reason, then run Phase 5 (Cleanup). Do NOT push back. |
-| Writer never sends pitch or abort message (3+ idle notifications with no message) | Shut down writer and read the corpus yourself. If <3 posts or no real thread, abort. Otherwise write the issue yourself. |
-| Writer never sends draft after pitch approval (3+ idle notifications) | Shut down writer and write the draft yourself based on the approved pitch. |
-| Draft missing frontmatter fields | Send one revision request with specifics; if still broken, fix directly |
-| Corpus is empty (no daily posts in the window) | Abort: notify the user that there is nothing to compile, and shut down the team. |
+| Writer aborts at the substance gate | Follow "Handling an abort message" in Phase 2. |
+| Termination/shutdown signal arrives right after spawn, no pitch or abort message | Not proof of death. Check the writer's task status, verify the disk, and start reading the corpus yourself — but do NOT create the issue file yet. Nudge once; take over fully only after nudge + silence. |
+| Writer stays silent after a nudge | Take over: read the corpus yourself. If <3 posts or no real thread, abort. Otherwise write the issue yourself. |
+| "Draft ready" but no matching file on disk | Hallucinated completion. Treat as "no draft": nudge once with the exact target path, then take over if silent. |
+| Draft missing frontmatter fields | Send one revision request with specifics; if still broken, fix directly (stand the writer down first). |
+| Corpus is empty (no daily posts in the window) | Abort: notify the user that there is nothing to compile, and stand the writer down. |
 | `git push` fails | Retry once, then report the error to the user |
 
 The skill produces an issue ONLY when there is real material to draw from. A clean abort with a clear reason to the user is a successful outcome — the magazine's quality bar matters more than its frequency.
 
 ## Important Notes
 
-- Use `const` arrow functions if you ever write any JavaScript or TypeScript helper code
-- Use explicit variable names (e.g. `corpusPosts` not `posts`, `previousIssue` not `prev`)
 - The creative writing is the most important part. Give detailed, thoughtful editorial feedback — not rubber-stamp approvals.
-- The magazine is a different beast than the daily posts. The biggest editorial risk is letting it become a recap. Your single most valuable intervention is enforcing thread-not-survey.
+- The magazine is a different beast than the daily posts. The biggest editorial risk is letting it become a recap in costume. Your single most valuable intervention is enforcing thread-not-survey.
