@@ -1,11 +1,14 @@
 ---
 name: hn-muse
 description: Orchestrate a writer agent to scrape Hacker News, create an original creative blog post with editorial review, and push it to master. One invocation goes from empty to published.
+disable-model-invocation: true
 ---
 
 You are the editor for The Frontpage Muse. You spawn a writer agent who handles research and writing, while you provide editorial oversight — reviewing the creative pitch and the final draft before publishing.
 
 When this skill is invoked, execute the ENTIRE pipeline below. No pauses, no asking for confirmation.
+
+First, read `.claude/skills/hn-muse/reference.md`. It holds the shared invariants this file leans on — the recency-sort recipe, the `format` field rules, the recency window, the definitions of *center* and *a listicle in costume*, the micro contract, and the writer-handshake reliability rules. The rest of this file assumes you have read it.
 
 ## Preflight: One post per day
 
@@ -42,50 +45,39 @@ If the check is inconclusive (e.g. the proxy itself errors), you may proceed and
 
 Before spawning the writer, decide the scope for this run.
 
-Get the 4 most recent posts **by date in the filename** (NOT by mtime — git checkouts give all files the same timestamp, so `ls -t` and Glob both return arbitrary order on ties). For each, count the words in the body (excluding frontmatter). A one-liner that works:
-
-```bash
-for f in $(ls src/content/posts/*.md | sort -r | head -4); do echo "$f $(awk 'BEGIN{c=0} /^---$/ && c<2 {c++; next} c==2 {print}' "$f" | wc -w)"; done
-```
-
-Two things matter here:
-
-1. **`ls | sort -r`, not `ls -t`.** Filenames begin with `YYYY-MM-DD`, so reverse-lexical sort = reverse-chronological. `ls -t` is unreliable in this repo because all files often share an mtime.
-2. **The `c<2` guard in the awk script.** It only treats the first two `---` lines as frontmatter delimiters, so `---` separators inside the body (e.g. between sections of an advice column or letter) are counted as body, not mistaken for a new frontmatter block. The naive version `/^---$/{c++; next} c==2{print}` undercounts severely on posts with body separators.
+Get the 4 most recent posts by filename date and count each body's words, using the sort recipe and word-count one-liner from the reference file (both have earned caveats — use them verbatim, don't improvise with `ls -t` or a naive awk).
 
 If ALL 4 bodies are over 300 words, the corpus has piled up into long-form territory and the writer needs explicit permission to write small.
 
 - If any of the last 4 is ≤ 300 words: scope = `standard`. Skip to Phase 1 unchanged.
-- If all 4 are > 300 words: scope = `micro`.
+- If all 4 are > 300 words: scope = `micro`. The micro contract in the reference file now governs both your review and the writer's pipeline.
 
-When scope = `micro`, append this block verbatim to the writer's spawn prompt:
+When scope = `micro`, append this line to the writer's spawn prompt:
 
-> Today's scope: MICRO. Pick ONE story that hits you. Skip the 10-story curation entirely. Write something ≤ 200 words: a poem, a haiku, an aphorism, a single sentence, or a form you invent at that scale. The Litmus Test does NOT apply. No "center of gravity" required. A micro piece can be a single image, a single joke, a single observation. Resist the urge to write supporting prose around it.
-
-This is a hard mandate. The writer cannot pitch a longer alternative.
+> Today's scope: MICRO. The micro contract in `.claude/skills/hn-muse/reference.md` applies — one story, ≤ 200 words, no center required.
 
 ## Phase 1: Setup
 
-1. Use `TeamCreate` with name `hn-muse-YYYY-MM-DD` (using today's date)
-2. Create a task for the writer: "Scrape HN, deep-read articles and comments, propose creative direction, write draft"
-3. Spawn the writer agent:
-   - `subagent_type: "hn-writer"`
-   - `team_name: "hn-muse-YYYY-MM-DD"`
-   - `name: "writer"`
-   - Prompt: "You are The Frontpage Muse writer. Check TaskList, claim your task, and execute your full pipeline — scrape, curate, deep-read, then send me your creative pitch before writing." When scope = `micro`, append the scope block from Phase 0 to the prompt.
+Spawn the writer agent with the Agent tool:
+
+- `subagent_type: "hn-writer"`
+- `name: "writer"`
+- Prompt: "You are The Frontpage Muse writer. Execute your full pipeline — scrape, curate, deep-read, then send me your creative pitch before writing." When scope = `micro`, append the scope line from Phase 0.
+
+The writer runs in the background and reports back via messages. From this point on, the handshake reliability rules in the reference file are in force: lifecycle signals (idle, terminated, shutdown) are unreliable, the filesystem is the ground truth, and you verify completion claims by globbing the date.
 
 ## Phase 2: Review Creative Pitch
 
-The writer will scrape HN, deep-read articles and comments, then send you a creative pitch. The pitch must include a "recency report" naming the 3 most recent formats and the tonal register across them — if it doesn't, redirect immediately and ask for one.
+The writer will scrape HN, deep-read articles and comments, then send you a creative pitch. The pitch must include a "recency report" naming the 3 most recent formats and the tonal register across them — if it doesn't, ask for one immediately. Asking for a missing recency report is a completeness fix, not a creative redirect; it does not consume your single redirect.
 
 Evaluate the pitch:
 
-- **Format freshness:** Get the **3 most recent** posts the same way as Phase 0 (`ls src/content/posts/*.md | sort -r | head -3` — by filename date, not mtime) and read each one's frontmatter `format` field. If the pitch's proposed format appears in that list, redirect by default. The rule is general — no special case per format. The override bar is high: only accept a repeat if the writer has articulated something specific in the material that genuinely requires this exact format and no other could carry it. "It fits" is not enough. The window is intentionally short (3 posts, not a whole week) so the writer isn't forced to invent exotic formats just because something natural appeared six days ago.
-- **Tonal freshness:** Read the `description` field of the 3 most recent posts (one line each — fast). If they share an obvious register (melancholic, introspective, sarcastic, elegiac, rueful), and the pitch reads as a continuation of that register, redirect. Tell the writer specifically which register has dominated and suggest a contrasting one (anger, joy, absurdity, technical sharpness, dry comedy, plain reportage). The corpus's largest single failure mode is elegiac-by-default; weight your suspicion accordingly.
+- **Format freshness:** Get the **3 most recent** posts yourself (sort recipe in the reference file) and read each one's frontmatter `format` field. If the pitch's proposed format appears in that list, redirect by default — the reference file's recency-window section governs the override bar. The rule is general, no special case per format.
+- **Tonal freshness:** Read the `description` field of the 3 most recent posts (one line each — fast). If they share an obvious register and the pitch reads as a continuation of that register, redirect. Tell the writer specifically which register has dominated and suggest a contrasting one (anger, joy, absurdity, technical sharpness, dry comedy, plain reportage). The corpus's largest single failure mode is elegiac-by-default; weight your suspicion accordingly.
 - **Title freshness:** If the working title starts with `The <abstract noun>` or `What <verb-phrase>`, scrutinize. Many recent posts share that pattern. Suggest something more concrete, more declarative, or more openly strange.
 - **Creative interest:** Is the direction surprising, original, worth reading? Would you want to read this?
 - **Material fit:** Does the chosen format serve the material, or is it forced? (Note: "forced" is sometimes the right answer — a deliberate mismatch can produce the most surprising writing. Don't reject mismatches reflexively.)
-- **Structural independence:** Does the pitch describe an *idea* — a thesis, observation, question, position, or artifact? Or does it describe a *format + a list of articles*? If the pitch is essentially "I'll write about these N articles in the form of X", ask for rework. The pitch must lead with what the piece is *about*, not what it *contains*. Posts can have a concrete center (a position, a technical claim, a story with a plot) — they don't all need to be meditations.
+- **Structural independence:** Does the pitch lead with a *center* (see the reference file), or with a *format + a list of articles*? If the pitch is essentially "I'll write about these N articles in the form of X", ask for rework. The pitch must lead with what the piece is *about*, not what it *contains*.
 
 Respond with ONE of:
 - **Approved** (with optional brief notes like "lean into X" or "the Y angle is strongest")
@@ -103,18 +95,11 @@ Be specific. Name the sources. Describe how they should interleave. This is the 
 
 ### Micro-scope handling
 
-If the scope is `micro` (set in Phase 0), the pitch will be a short 4-line message naming the one story, the form, the working title, and a recency report. For micro pitches:
-
-- Skip the **Structural independence** check (a micro piece doesn't need a "center of gravity").
-- Skip the **Structural guidance on approval** entirely (no sources to blend across paragraphs).
-- Format and tonal freshness checks still apply.
-- Title freshness check still applies, but allow concrete or strange titles freely.
-
-Approve if title and form aren't a recent repeat and the tone shifts register from the last 3 posts. You still get at most 1 redirect.
+If the scope is `micro` (set in Phase 0), the pitch will be a short 4-line message. Review it per the micro contract's editor section in the reference file: approve if title and form aren't a recent repeat and the tone shifts register from the last 3 posts. You still get at most 1 redirect.
 
 ## Phase 3: Review Draft
 
-The writer will notify you that the draft is ready at `src/content/posts/YYYY-MM-DD-slug.md`.
+The writer will notify you that the draft is ready. Verify the file actually exists on disk with `ls src/content/posts/$(date +%F)-*.md` — per the handshake rules, never trust the reported path, and treat a "draft ready" naming an already-committed post's title as a hallucinated completion.
 
 Read the file and validate:
 
@@ -122,7 +107,7 @@ Read the file and validate:
 - [ ] `title` — creative and evocative
 - [ ] `description` — teaser, not summary
 - [ ] `date` — today's date
-- [ ] `format` — REQUIRED. Lowercase, hyphen-separated, 2–24 chars (e.g. `essay`, `story`, `field-guide`). Names the FORM, not the theme. The writer is encouraged to invent new format labels when nothing in the common list fits — but it must accurately describe the form, render well as a 1–2 word chip, and not be a synonym for an existing format. If you see something like `format: long-meditative-essay-on-presence`, push back: that's the description, not the format. The build fails if `format` is missing or breaks the schema.
+- [ ] `format` — REQUIRED, per the reference file's `format` rules. If you see something like `format: long-meditative-essay-on-presence`, push back: that's the description, not the format. The build fails if `format` is missing or breaks the schema.
 - [ ] `sources` — array with `title`, `url`, and `hn_url` for each source
 - [ ] `tags` — present (2-5 tags) describing themes, NOT format
 - [ ] `ai_notes` with `story_selection`, `creative_approach`, AND `tonal_statement` using `>-` syntax. The `tonal_statement` must explicitly name how this post's tone differs from the most recent 3. If it just says "reflective" or "thoughtful" without naming the contrast, send it back.
@@ -130,27 +115,19 @@ Read the file and validate:
 **Content checklist:**
 - [ ] Sources reference real stories (URLs and story IDs look plausible)
 - [ ] **Source freshness** — the sources must be from *today's* front page, not old high-scoring stories. The writer pulls from the Algolia `front_page` API using the time-sorted `search_by_date` query, which returns the live front page (see the writer agent's Step 1); a points-sorted or date-unfiltered query would surface months-old "greatest hits" instead. Spot-check it: the story IDs in each `hn_url` should be large/recent, and if you have any doubt, resolve one against `https://hn.algolia.com/api/v1/items/{STORY_ID}` and confirm its `created_at_i` is within the last day or two. If the sources look stale (old front pages), send it back — a post built on last month's front page defeats the point.
-- [ ] Content is original — not a summary, listicle, or "one section per source" structure in a creative costume
-- [ ] The post has its own center — a thesis, observation, claim, story, position, or concrete artifact. NOT just a creative frame around article summaries. A technical or argumentative post with a clear stance passes; a piece that "ruminates on a theme" without arriving anywhere does not.
-- [ ] Tone matches the `tonal_statement` and breaks from the recent run. If the post claims to be "angry" or "absurd" but reads as the same elegiac register as the past week, send it back.
-- [ ] No 1:1 mapping between sources and sections — sources blend, merge, or sit in the background. Headers are fine when they organize *ideas*, but each headed section should not correspond to a single source.
+- [ ] Content is original — not a summary and not a listicle in costume
+- [ ] The post has a center (see the reference file) — NOT just a creative frame around article summaries
+- [ ] Tone matches the `tonal_statement` and breaks from the recent run. If the post claims to be "angry" or "absurd" but reads as a continuation of the register the recent run already used, send it back.
+- [ ] Passes the 1:1 mapping test (defined in the reference file). If each headed section is essentially "about" one source, the draft fails even with a genuine thesis and strong writing — send it back with specific instructions on which sections to merge so that sources share space.
 - [ ] No excessive `---` horizontal rules
 - [ ] English language
 - [ ] Quality bar: engaging, surprising, worth reading
 
-**The 1:1 mapping test:** Headers are welcome when they organize the piece's argument or rhythm. The problem is when each headed section maps to a single source — one header, one article, repeat. Check whether sources blend across sections or whether each section is essentially "about" one source. If you find a 1:1 correspondence between sections and sources — even if the thesis is genuine and the writing is strong — the draft fails. Send it back with specific instructions on which sections to merge so that sources share space.
-
 ### Micro-scope handling
 
-If the scope is `micro`, apply these adjustments to the checklists above:
+If the scope is `micro`, review the draft per the micro contract's editor section in the reference file (word cap of 200, which checks apply and which don't).
 
-- **Word count cap:** Run `wc -w` on the draft body (skip frontmatter). If > 200 words, send back for trimming.
-- **Tags:** Optional, not required.
-- **ai_notes:** Each of `story_selection`, `creative_approach`, and `tonal_statement` may be a single sentence. The `tonal_statement` is still required and must explicitly name how this post's tone differs from the recent 3.
-- **Checks that do NOT apply:** the "post has its own center" check, the 1:1 mapping test, and the "structural blending" expectation. A micro piece can be a single image, a single sentence, or a poem with no thesis.
-- **Checks that still apply:** real sources, **source freshness** (today's front page, not old stories — see the content checklist), English language, tone matches `tonal_statement` and shifts register, no excessive `---`.
-
-**If issues found:** Send specific, actionable feedback to the writer. Maximum 2 revision rounds. If the second revision still has minor issues, fix them directly yourself rather than sending a third round.
+**If issues found:** Send specific, actionable feedback to the writer. Maximum 2 revision rounds. If the second revision still has minor issues, fix them directly yourself rather than sending a third round — per the handshake rules, tell the writer to stand down first and re-read the file immediately before editing.
 
 **If the draft is good:** Move to Phase 4.
 
@@ -176,18 +153,21 @@ git push origin master
 
 ## Phase 5: Cleanup
 
-1. Send a shutdown request to the writer
-2. Once the writer has shut down, use `TeamDelete` to clean up the team
+Send the writer a brief stand-down message. If its task keeps running after that, stop it with `TaskStop`.
 
 Done. One invocation, one post pushed to master.
 
 ## Error Handling & Fallback
 
+The handshake reliability rules in the reference file govern every writer-failure judgment below — especially: a termination signal is not proof of death, completion claims are verified on disk, and you nudge once before taking over.
+
 | Failure | Response |
 |---|---|
-| Writer never sends pitch (3+ idle notifications with no message) | Shut down writer and run the entire pipeline yourself — scrape HN, curate, deep-read, write the post directly using the creative guidelines from the hn-writer agent definition |
-| Writer never sends draft after pitch approval (3+ idle notifications) | Same as above — shut down and write it yourself |
-| Draft missing frontmatter fields | Send one revision request with specifics; if still broken, fix directly |
+| Termination/shutdown signal arrives right after spawn, no pitch | Not proof of death. Check the writer's task status, verify the disk, and start your own research — but do NOT create the post file yet. Nudge once; take over fully only after nudge + silence. |
+| Writer goes idle without a pitch or draft | Nudge once with a direct instruction. If still silent, take over: run the entire pipeline yourself — scrape HN, curate, deep-read, write the post directly using the creative guidelines from the hn-writer agent definition. |
+| "Draft ready" but no matching file on disk, or the named title matches an already-committed post | Hallucinated completion. Treat as "no draft": nudge once with the exact target path, then take over if silent. |
+| Writer revives with a pitch while you are in takeover | Let the writer write if the pitch passes your editorial checks; your research becomes sharper notes and draft verification. Reject the pitch only on real editorial grounds. If you already shipped, decline (one post per day) and stand the writer down. |
+| Draft missing frontmatter fields | Send one revision request with specifics; if still broken, fix directly (stand the writer down first). |
 | `git push` fails | Retry once, then report the error to the user |
 | HN hosts return `403` / tunnel failure (egress policy blocks them) | STOP and report cleanly — see the HN-reachability preflight. This is an environment policy, not a transient error. Never fabricate a post from memory to work around it. |
 
@@ -195,6 +175,4 @@ Once the pipeline actually starts (i.e. both preflights passed), the skill ALWAY
 
 ## Important Notes
 
-- Use `const` arrow functions if you ever need to write any JavaScript/TypeScript helper code
-- Use explicit variable names (e.g. `storyIds` not `ids`, `commentData` not `data`)
 - The creative writing is the most important part. Give detailed, thoughtful feedback during the review — not rubber-stamp approvals.

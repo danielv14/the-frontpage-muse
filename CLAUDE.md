@@ -48,6 +48,7 @@ src/
   styles/             # global.css — Tailwind 4 theme and custom styles
 .claude/
   skills/hn-muse/           # Editor skill — daily pipeline
+  skills/hn-muse/reference.md   # Shared invariants for BOTH pipelines (sort recipe, format rules, micro contract, handshake reliability)
   skills/hn-muse-magazine/  # Editor skill — magazine pipeline
   agents/hn-writer.md           # Writer agent — daily research and writing
   agents/hn-magazine-writer.md  # Writer agent — magazine meta-issue
