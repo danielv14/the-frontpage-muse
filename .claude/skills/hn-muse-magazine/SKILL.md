@@ -22,16 +22,16 @@ Spawn the writer agent with the Agent tool:
 - `name: "writer"`
 - Prompt: "You are the Muse's magazine editor-in-residence. Execute your full pipeline — read the corpus, find the thread, then send me your creative pitch before writing."
 
-The writer runs in the background and reports back via messages. From this point on, the handshake reliability rules in the reference file are in force: lifecycle signals are unreliable, the filesystem is the ground truth, and you verify completion claims by globbing the date under `src/content/magazines/`.
+The writer runs in the background. From this point on, the handshake reliability rules in the reference file are in force: lifecycle signals are unreliable, the filesystem is the ground truth, and you verify completion claims by globbing the date under `src/content/magazines/`. The two things you wait for are both files, `.tmp/magazine-pitch.md` and the issue itself. Messages only announce them; the files are what you read.
 
-## Phase 2: Review Creative Pitch (or Abort Message)
+## Phase 2: Review Creative Pitch (or Abort)
 
-The writer may send you one of two things:
+The writer writes one of two things to `.tmp/magazine-pitch.md` and messages you. Read the file, check its `Date:` line against today, and act on that rather than the message body. Handshake rule 9 in the reference file covers the file's four states.
 
-1. **An abort message** — if the writer determines there is not enough material in the coverage window (fewer than ~3 posts, posts all on the same narrow topic, or no genuine corpus-level thread). The message will explain the reason in plain language.
-2. **A creative pitch** — if the writer found a thread worth writing about.
+1. **An abort:** an `Abort: <reason>` line, when there is not enough material in the coverage window (fewer than ~3 posts, one narrow topic, or no genuine corpus-level thread).
+2. **A creative pitch:** a thread worth writing about. Its `Coverage:` line is the window the writer actually read; check it against the corpus you expect.
 
-### Handling an abort message
+### Handling an abort
 
 If the writer aborts, **respect that decision**. Do NOT push back, do NOT ask the writer to try harder, do NOT redirect them to "find something." The substance gate exists precisely so that a magazine issue is only produced when there is real material. A skipped issue is the right output when the corpus is thin.
 
@@ -118,6 +118,12 @@ git push origin master
 
 Send the writer a brief stand-down message. If its task keeps running after that, stop it with `TaskStop`.
 
+If an issue shipped, drop the handshake scratch (an abort leaves it in place):
+
+```bash
+rm -f .tmp/magazine-pitch.md
+```
+
 Done. One invocation, one issue published.
 
 ## Error Handling & Fallback
@@ -126,8 +132,9 @@ The handshake reliability rules in the reference file govern every writer-failur
 
 | Situation | Response |
 |---|---|
-| Writer aborts at the substance gate | Follow "Handling an abort message" in Phase 2. |
-| Termination/shutdown signal arrives right after spawn, no pitch or abort message | Not proof of death. Check the writer's task status, verify the disk, and start reading the corpus yourself — but do NOT create the issue file yet. Nudge once; take over fully only after nudge + silence. |
+| Writer aborts at the substance gate | Follow "Handling an abort" in Phase 2. |
+| Termination/shutdown signal arrives right after spawn, no pitch or abort | Not proof of death. Check the writer's task status, verify the disk, and start reading the corpus yourself — but do NOT create the issue file yet. Nudge once; take over fully only after nudge + silence. |
+| Idle or termination signal while `.tmp/magazine-pitch.md` exists | Read its date. Today means only the message went missing: act on the file, pitch or abort, no nudge. An older date is a leftover to ignore. |
 | Writer stays silent after a nudge | Take over: read the corpus yourself. If <3 posts or no real thread, abort. Otherwise write the issue yourself. |
 | "Draft ready" but no matching file on disk | Hallucinated completion. Treat as "no draft": nudge once with the exact target path, then take over if silent. |
 | Draft missing frontmatter fields | Send one revision request with specifics; if still broken, fix directly (stand the writer down first). |

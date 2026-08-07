@@ -18,39 +18,31 @@ Before anything else, check whether a post already exists for today. The Muse pu
 TODAY=$(date +%F); ls src/content/posts/${TODAY}-*.md 2>/dev/null
 ```
 
-- **If the command lists one or more files:** a post already exists for today. **STOP the pipeline immediately.** Do NOT spawn the writer, do NOT create a task, do NOT write or commit anything. Report to the user which post already exists (its filename) and that the run was skipped for that reason. A clean skip is the correct outcome here — do not try to work around it by writing to a different slug.
-- **If the command lists nothing:** no post exists yet for today. Continue to Phase 0.
+- **One or more files listed:** a post already exists for today. **STOP the pipeline immediately:** no writer, no task, nothing written or committed. Report which post exists (its filename) and that the run was skipped for that reason. A clean skip is the correct outcome.
+- **Nothing listed:** continue to Phase 0.
 
-The only exception: if the user's invocation explicitly asked for an *additional* post for a day that already has one, proceed past this guard and let the new post land at its own distinct slug.
+The one exception: an invocation that explicitly asked for an *additional* post for a day that already has one. Then proceed, and let the new post land at its own slug.
 
-## Preflight: HN reachability (environment matters)
+## Preflight: HN reachability
 
-The whole pipeline depends on reaching Hacker News. Whether you can reach it **depends on where this skill is running**, and the two environments behave differently:
-
-- **On the user's own machine (local Claude Code):** outbound network is open. `hacker-news.firebaseio.com` and `hn.algolia.com` are reachable, and the pipeline runs end-to-end as written. This is the normal case.
-- **In a remote/sandboxed session (e.g. Claude Code on the web or mobile):** outbound HTTPS goes through a policy-enforcing egress proxy with an *allowlist*. HN hosts are frequently **not** on that allowlist, so every request to them fails with a `403` CONNECT-tunnel denial (via both `curl` and WebFetch). This is an environment policy, not an API outage or a transient error.
-
-Before spawning the writer, probe reachability once so you fail fast instead of watching the writer burn its whole run on blocked requests:
+Whether you can reach Hacker News depends on where this skill runs. Locally the outbound network is open and the pipeline runs as written, which is the normal case. In a remote or sandboxed session (Claude Code on web or mobile) outbound HTTPS goes through an allowlisting egress proxy that usually does not carry `hn.algolia.com` or `hacker-news.firebaseio.com`, so every request fails with a `403` CONNECT-tunnel denial through both `curl` and WebFetch. Probe once before spawning the writer, so you fail fast instead of watching it burn a whole run on blocked requests:
 
 ```bash
 curl -sS -o /dev/null -w "%{http_code}\n" --max-time 15 'https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=1' 2>&1
 ```
 
-- **A `200` (or any real HTTP response):** HN is reachable. Continue to Phase 0.
-- **A `403` tunnel failure / exit code 56 / empty output:** HN is blocked in this environment. **STOP the pipeline and report cleanly to the user** — name the blocked host, explain it is this session's egress policy (not a bug), and note that the skill works normally on their local machine. Do NOT retry, do NOT route around it, and do NOT fall back to writing a post from memory (see Error Handling — a fabricated post with invented sources is never acceptable). A clean, explained skip is the correct outcome here.
-
-If the check is inconclusive (e.g. the proxy itself errors), you may proceed and let the writer's own reachability handling in Step 1 catch it.
+- **`200`, or any real HTTP response:** HN is reachable. Continue to Phase 0.
+- **`403` tunnel failure, exit code 56, or empty output:** HN is blocked here. **STOP and report cleanly:** name the blocked host, say it is this session's egress policy rather than a bug, and note that the skill works on the user's local machine. A clean, explained skip is the correct outcome; a post written from memory, with invented sources, never is.
+- **Inconclusive (the proxy itself errors):** proceed, and let the writer's own Step 1 reachability handling catch it.
 
 ## Phase 0: Scope decision
 
 Before spawning the writer, decide the scope for this run.
 
-Get the 4 most recent posts by filename date and count each body's words, using the sort recipe and word-count one-liner from the reference file (both have earned caveats — use them verbatim, don't improvise with `ls -t` or a naive awk).
+Get the 4 most recent posts by filename date and count each body's words, using the sort recipe and word-count one-liner from the reference file verbatim; both carry earned caveats.
 
-If ALL 4 bodies are over 300 words, the corpus has piled up into long-form territory and the writer needs explicit permission to write small.
-
-- If any of the last 4 is ≤ 300 words: scope = `standard`. Skip to Phase 1 unchanged.
-- If all 4 are > 300 words: scope = `micro`. The micro contract in the reference file now governs both your review and the writer's pipeline.
+- Any of the 4 at ≤ 300 words: scope = `standard`. Continue to Phase 1 unchanged.
+- All 4 over 300 words: scope = `micro`. The corpus has piled up into long-form territory and the writer needs explicit permission to write small. The micro contract in the reference file now governs both your review and the writer's pipeline.
 
 When scope = `micro`, append this line to the writer's spawn prompt:
 
@@ -64,11 +56,13 @@ Spawn the writer agent with the Agent tool:
 - `name: "writer"`
 - Prompt: "You are The Frontpage Muse writer. Execute your full pipeline — scrape, curate, deep-read, then send me your creative pitch before writing." When scope = `micro`, append the scope line from Phase 0.
 
-The writer runs in the background and reports back via messages. From this point on, the handshake reliability rules in the reference file are in force: lifecycle signals (idle, terminated, shutdown) are unreliable, the filesystem is the ground truth, and you verify completion claims by globbing the date.
+The writer runs in the background. From this point on, the handshake reliability rules in the reference file are in force: lifecycle signals (idle, terminated, shutdown) are unreliable, the filesystem is the ground truth, and you verify completion claims by globbing the date. The two things you wait for are both files, `.tmp/pitch.md` and the post itself. Messages only announce them; the files are what you read.
 
 ## Phase 2: Review Creative Pitch
 
-The writer will scrape HN, deep-read articles and comments, then send you a creative pitch. The pitch must include a "recency report" naming the 3 most recent formats and the tonal register across them — if it doesn't, ask for one immediately. Asking for a missing recency report is a completeness fix, not a creative redirect; it does not consume your single redirect.
+The writer will scrape HN, deep-read articles and comments, then write its pitch to `.tmp/pitch.md` and message you. Read the file, check its `Date:` line against today, and review that rather than the message body. Handshake rule 9 in the reference file covers the file's four states.
+
+The pitch must include a "recency report" naming the 3 most recent formats and the tonal register across them — if it doesn't, ask for one immediately. Asking for a missing recency report is a completeness fix, not a creative redirect; it does not consume your single redirect.
 
 Evaluate the pitch:
 
@@ -95,7 +89,7 @@ Be specific. Name the sources. Describe how they should interleave. This is the 
 
 ### Micro-scope handling
 
-If the scope is `micro` (set in Phase 0), the pitch will be a short 4-line message. Review it per the micro contract's editor section in the reference file: approve if title and form aren't a recent repeat and the tone shifts register from the last 3 posts. You still get at most 1 redirect.
+If the scope is `micro` (set in Phase 0), the pitch file will hold 4 lines plus the date line. Review it per the micro contract's editor section in the reference file: approve if title and form aren't a recent repeat and the tone shifts register from the last 3 posts. You still get at most 1 redirect.
 
 ## Phase 3: Review Draft
 
@@ -114,7 +108,7 @@ Read the file and validate:
 
 **Content checklist:**
 - [ ] Sources reference real stories (URLs and story IDs look plausible)
-- [ ] **Source freshness** — the sources must be from *today's* front page, not old high-scoring stories. The writer pulls from the Algolia `front_page` API using the time-sorted `search_by_date` query, which returns the live front page (see the writer agent's Step 1); a points-sorted or date-unfiltered query would surface months-old "greatest hits" instead. Spot-check it: the story IDs in each `hn_url` should be large/recent, and if you have any doubt, resolve one against `https://hn.algolia.com/api/v1/items/{STORY_ID}` and confirm its `created_at_i` is within the last day or two. If the sources look stale (old front pages), send it back — a post built on last month's front page defeats the point.
+- [ ] **Source freshness** — sources must come from *today's* front page. The writer's time-sorted `search_by_date` query returns the live front page; a points-sorted or date-unfiltered one surfaces months-old greatest hits instead. Spot-check that the story IDs in each `hn_url` are large, and on any doubt resolve one against `https://hn.algolia.com/api/v1/items/{STORY_ID}` and confirm `created_at_i` falls within a day or two. Stale sources go back: a post built on last month's front page defeats the point.
 - [ ] Content is original — not a summary and not a listicle in costume
 - [ ] The post has a center (see the reference file) — NOT just a creative frame around article summaries
 - [ ] Tone matches the `tonal_statement` and breaks from the recent run. If the post claims to be "angry" or "absurd" but reads as a continuation of the register the recent run already used, send it back.
@@ -155,6 +149,12 @@ git push origin master
 
 Send the writer a brief stand-down message. If its task keeps running after that, stop it with `TaskStop`.
 
+Then drop the handshake scratch, now that the post has shipped:
+
+```bash
+rm -f .tmp/pitch.md
+```
+
 Done. One invocation, one post pushed to master.
 
 ## Error Handling & Fallback
@@ -163,15 +163,16 @@ The handshake reliability rules in the reference file govern every writer-failur
 
 | Failure | Response |
 |---|---|
-| Termination/shutdown signal arrives right after spawn, no pitch | Not proof of death. Check the writer's task status, verify the disk, and start your own research — but do NOT create the post file yet. Nudge once; take over fully only after nudge + silence. |
+| Termination/shutdown signal arrives right after spawn, no pitch | Not proof of death. Check the writer's task status, verify the disk, and start your own research; the post file waits until nudge plus silence. |
 | Writer goes idle without a pitch or draft | Nudge once with a direct instruction. If still silent, take over: run the entire pipeline yourself — scrape HN, curate, deep-read, write the post directly using the creative guidelines from the hn-writer agent definition. |
+| Idle or termination signal while `.tmp/pitch.md` exists | Read its date. Today means only the message went missing: review and reply, no nudge, no takeover. An older date is a leftover to ignore. |
 | "Draft ready" but no matching file on disk, or the named title matches an already-committed post | Hallucinated completion. Treat as "no draft": nudge once with the exact target path, then take over if silent. |
 | Writer revives with a pitch while you are in takeover | Let the writer write if the pitch passes your editorial checks; your research becomes sharper notes and draft verification. Reject the pitch only on real editorial grounds. If you already shipped, decline (one post per day) and stand the writer down. |
 | Draft missing frontmatter fields | Send one revision request with specifics; if still broken, fix directly (stand the writer down first). |
 | `git push` fails | Retry once, then report the error to the user |
 | HN hosts return `403` / tunnel failure (egress policy blocks them) | STOP and report cleanly — see the HN-reachability preflight. This is an environment policy, not a transient error. Never fabricate a post from memory to work around it. |
 
-Once the pipeline actually starts (i.e. both preflights passed), the skill ALWAYS produces a post, even in degraded single-agent mode. If the writer fails for any reason *other than* network, you do everything yourself. There are exactly **two** clean no-post outcomes, both caught in preflight before the pipeline begins: (1) a post already exists for today, or (2) HN is unreachable from this environment. Degraded single-agent mode is for a *misbehaving writer* on a machine that *can* reach HN — it never means inventing stories, URLs, or comments from memory. A post with fabricated sources is worse than no post.
+Past both preflights, the skill ALWAYS produces a post, degraded single-agent mode included: a writer that fails for any reason *other than* network means you run the whole pipeline yourself. There are exactly **two** clean no-post outcomes and both are caught in preflight, before the pipeline begins: a post already exists for today, or HN is unreachable from this environment. Single-agent mode covers a misbehaving writer on a machine that *can* reach HN, so it still means real scraping. A post with fabricated sources is worse than no post.
 
 ## Important Notes
 
