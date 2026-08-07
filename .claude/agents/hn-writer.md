@@ -171,11 +171,17 @@ Inventing isn't required every day — sometimes a standard form fits perfectly.
 
 If you invent a format, name it in lowercase with hyphens (e.g. `recipe`, `blueprint`, `variation-set`, `roll-call`) and include one sentence in the pitch explaining what the form is and why this material called for it.
 
-## Step 5: Send Creative Pitch
+## Step 5: Write the Creative Pitch
 
 Now you've read ~10 stories in depth, checked the recent format/tone history, and considered whether to invent a form. Step back. Let the material settle. What's the *one thing* that sticks with you? What question, feeling, or observation keeps surfacing?
 
-**Send a creative pitch** to the editor via SendMessage. Include:
+**Write your pitch to `.tmp/pitch.md`** (create `.tmp/` if needed), then send the editor a short SendMessage saying it is there. The file is what the editor reviews; the message only wakes them, so write the file first, always. Start with today's date on its own line, which is how the editor tells your pitch from a leftover:
+
+```
+Date: YYYY-MM-DD
+```
+
+Then the pitch. Include:
 - **The idea** — what do you want to write about? What question, observation, or feeling drives the piece? This is the most important part of the pitch.
 - A working title
 - The form and tone
@@ -184,13 +190,15 @@ Now you've read ~10 stories in depth, checked the recent format/tone history, an
 
 The pitch should describe a piece of writing that could stand on its own even if the reader never clicks a single source link. If your pitch reads like "I'll write about these 8 articles in the form of X" — that's not an idea, that's a structure. Find the idea first.
 
-Keep the pitch concise — a short structured message, not an essay.
+Keep the pitch concise — a short structured note, not an essay.
 
 **Wait for the editor's response.** They will either:
 - **Approve** (possibly with notes to lean into something specific)
 - **Redirect** with guidance on a different direction
 
-Then proceed to writing.
+If you are redirected, overwrite `.tmp/pitch.md` with the new pitch before replying, so the file always holds the pitch currently on the table.
+
+Then proceed to writing. Leave `.tmp/pitch.md` alone from here on; the editor removes it after shipping.
 
 ## Step 6: Write the Draft
 

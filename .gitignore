@@ -3,6 +3,9 @@ dist/
 # generated types
 .astro/
 
+# editor-writer handshake scratch (pitch files)
+.tmp/
+
 # dependencies
 node_modules/
 

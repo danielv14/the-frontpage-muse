@@ -38,11 +38,15 @@ A magazine issue is a commitment to make a real argument from real material. Run
 - **Recency of the previous issue.** If a previous magazine issue exists and was published very recently (the corpus window is unusually narrow because the last issue closed it), abort unless the post count comfortably clears the threshold above.
 - **Thematic monoculture.** If all posts in the corpus are on the same narrow topic and clearly repeat each other without any tension, drift, or contradiction between them, abort. There is nothing for a meta-issue to do — there is no spread to bridge.
 
-If you abort at this gate, send a single SendMessage to the editor explaining the reason. Use plain language. Examples:
+If you abort at this gate, write the reason to `.tmp/magazine-pitch.md` (create `.tmp/` if needed), then message the editor saying it is there. The file is what they act on. Use plain language:
 
-> "Aborting: only 2 posts in the coverage window since the last issue. Not enough material yet."
+```
+Date: YYYY-MM-DD
+Coverage: YYYY-MM-DD to YYYY-MM-DD
+Abort: only 2 posts in the coverage window since the last issue. Not enough material yet.
+```
 
-> "Aborting: 4 posts since the last issue, but they are all about the same narrow topic with no contrast between them. Nothing for a magazine to do here."
+Another reason, same shape: "4 posts since the last issue, but all on the same narrow topic with no contrast between them. Nothing for a magazine to do here."
 
 Do NOT pitch. Do NOT write a draft. Do NOT proceed to Step 3.
 
@@ -68,17 +72,24 @@ Before pitching anything, sit with what you've found and ask honestly:
 - **Would a thoughtful reader notice this on their own?** If the connection only exists because I am pointing at it, that is a sign it isn't there.
 - **If I were not invoked today, would I have wanted to write this?** The skill running is not, in itself, a reason to ship.
 
-If the honest answer is "I am forcing this," abort. Send a SendMessage to the editor explaining what you found and why it isn't strong enough. Example:
+If the honest answer is "I am forcing this," abort. Write the reason to `.tmp/magazine-pitch.md` in the same shape as the Step 2.5 abort, explaining what you found and why it isn't strong enough, then message the editor. Example reason:
 
-> "Aborting: I read all N posts and the closest I have to a thread is X, but it's thin — closer to coincidence than to a real corpus-level pattern. I do not think this clears the bar for an issue. Better to wait until there is real material."
+> "I read all N posts and the closest I have to a thread is X, but it's thin — closer to coincidence than to a real corpus-level pattern. I do not think this clears the bar for an issue. Better to wait until there is real material."
 
 You will not be punished for aborting. Skipping a magazine is the right move when the substance isn't there. The format taboo, the thread requirement, and the litmus test all exist to keep the magazine from becoming a recap; this gate exists for the same reason at the highest level.
 
 If the thread holds — proceed to Step 4.
 
-## Step 4: Send Creative Pitch
+## Step 4: Write the Creative Pitch
 
-**Send a creative pitch** to the editor via SendMessage. Include:
+**Write your pitch to `.tmp/magazine-pitch.md`** (create `.tmp/` if needed), then send the editor a short SendMessage saying it is there. The file is what the editor reviews; the message only wakes them, so write the file first, always. Start with two lines, which is how the editor tells your pitch from a leftover and checks your window against the corpus:
+
+```
+Date: YYYY-MM-DD
+Coverage: YYYY-MM-DD to YYYY-MM-DD
+```
+
+Then the pitch. Include:
 - **The thread** — what is the ONE thing you noticed across the corpus? This is the most important part.
 - A working title
 - The form and tone you propose (see format list below)
@@ -89,6 +100,8 @@ The pitch must describe a piece of writing that could stand on its own even if t
 **Wait for the editor's response.** They will either:
 - **Approve** (possibly with notes to lean into something specific)
 - **Redirect** with guidance on a different direction or different form
+
+If you are redirected, overwrite `.tmp/magazine-pitch.md` with the new pitch before replying, so the file always holds the pitch currently on the table. From then on leave it alone; the editor removes it after shipping.
 
 ## Step 5: Write the Draft
 
