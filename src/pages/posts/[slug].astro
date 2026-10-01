@@ -30,8 +30,6 @@ const formatDate = (d: Date): string => {
   });
 };
 
-const dayName = post.data.date.toLocaleDateString("en-US", { weekday: "long" }).toUpperCase();
-const fullDate = formatDate(post.data.date).toUpperCase();
 ---
 
 <BaseLayout
@@ -44,23 +42,19 @@ const fullDate = formatDate(post.data.date).toUpperCase();
   <article>
     <!-- Post header -->
     <header class="mb-10">
-      <!-- Issue line -->
-      <div class="issue-line">
-        <span>ISSUE No. {issueNum}</span>
-        <span class="issue-sep">·</span>
-        <span>{dayName}</span>
-        <span class="issue-sep">·</span>
-        <span>{fullDate}</span>
-        <span class="issue-sep">·</span>
-        <span>{readingTime} MIN</span>
+      <div class="meta">
+        <span class="meta-format">{format}</span>
+        <span class="meta-sep">·</span>
+        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+        <span class="meta-sep">·</span>
+        <span>{readingTime} min read</span>
+        <span class="meta-sep">·</span>
+        <span>No. {issueNum}</span>
       </div>
 
-      <!-- Format chip -->
-      <div class="kicker mt-5">{format}</div>
-
       <!-- Title -->
-      <h1 class="font-display font-bold text-ink leading-snug tracking-tight mt-3"
-          style="font-size: clamp(1.75rem, 4vw, 2.5rem);">
+      <h1 class="font-display font-bold text-ink leading-tight tracking-tight mt-3"
+          style="font-size: clamp(2rem, 4.5vw, 2.75rem);">
         {post.data.title}
       </h1>
 
@@ -93,28 +87,27 @@ const fullDate = formatDate(post.data.date).toUpperCase();
 
     <!-- Sources -->
     {post.data.sources && post.data.sources.length > 0 && (
-      <footer class="mt-14">
-        <div class="ornament"></div>
-        <h2 class="font-display italic text-xl text-ink-muted font-normal mb-3">Sources</h2>
-        <ul class="space-y-2.5">
+      <footer class="mt-16 pt-8 border-t border-rule max-w-[42rem]">
+        <h2 class="font-display italic text-lg text-ink-muted font-normal mb-3">Sources</h2>
+        <ul class="space-y-2">
           {post.data.sources.map((source: { title: string; url: string; hn_url: string }) => (
-            <li class="text-base font-body leading-snug">
+            <li class="font-body text-base leading-snug">
               <a
                 href={source.url}
-                class="link-draw text-ink"
+                class="link-draw text-ink-light"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 {source.title}
               </a>
-              <span class="text-rule mx-2">·</span>
+              <span class="text-rule mx-1.5">·</span>
               <a
                 href={source.hn_url}
-                class="text-ink-faint hover:text-accent font-mono text-[0.6875rem] tracking-[0.08em] uppercase transition-colors"
+                class="quiet-link text-sm"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                HN thread
+                discussion
               </a>
             </li>
           ))}
@@ -123,14 +116,8 @@ const fullDate = formatDate(post.data.date).toUpperCase();
     )}
 
     <!-- Back link -->
-    <div class="mt-12 pt-6 border-t border-rule">
-      <a
-        href="/"
-        class="inline-flex items-center gap-2 font-mono text-[0.6875rem] tracking-[0.08em] uppercase text-ink-muted hover:text-accent transition-colors"
-      >
-        <span>←</span>
-        Back to the front page
-      </a>
+    <div class="mt-12">
+      <a href="/" class="quiet-link">← Back to the front page</a>
     </div>
   </article>
 </BaseLayout>

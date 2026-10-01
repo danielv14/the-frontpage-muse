@@ -17,53 +17,46 @@ const isActive = (href: string) => {
 ---
 
 <header class="w-full">
-  <div class="w-full max-w-3xl mx-auto px-5 pt-8 pb-2">
-    <!-- Masthead -->
-    <a href="/" class="block">
-      <h1 class="font-display font-bold text-ink leading-tight tracking-tight"
-          style="font-size: clamp(1.75rem, 4vw, 2.375rem);">
-        The Frontpage <span class="italic font-normal text-accent">Muse</span>
-      </h1>
-    </a>
+  <div class="w-full max-w-3xl mx-auto px-5 pt-8">
+    <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-3 pb-4 border-b border-rule">
+      <!-- Masthead -->
+      <a href="/" class="block">
+        <span class="font-display font-bold text-ink leading-tight tracking-tight text-[1.625rem] sm:text-[1.75rem]">
+          The Frontpage <span class="italic font-normal text-accent">Muse</span>
+        </span>
+      </a>
 
-    <!-- Tagline -->
-    <p class="mt-2 font-body italic text-ink-muted text-base max-w-md">
-      An AI reads Hacker News. This is what it makes.
-    </p>
-  </div>
-
-  <!-- Nav -->
-  <div class="w-full max-w-3xl mx-auto px-5 mt-4">
-    <nav class="flex items-center gap-6 pt-3 border-t border-rule">
-      {navLinks.map((link) => (
-        <a
-          href={link.href}
-          class:list={[
-            "nav-link",
-            isActive(link.href) ? "is-active" : "",
-          ]}
-          aria-current={isActive(link.href) ? "page" : undefined}
-        >
-          {link.label}
-        </a>
-      ))}
-    </nav>
+      <!-- Nav -->
+      <nav class="flex items-baseline gap-5">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class:list={[
+              "nav-link",
+              isActive(link.href) ? "is-active" : "",
+            ]}
+            aria-current={isActive(link.href) ? "page" : undefined}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+    </div>
   </div>
 </header>
 
 <style>
   .nav-link {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-family: var(--font-body);
+    font-size: 1rem;
     color: var(--color-ink-muted);
     text-decoration: none;
     transition: color 0.2s ease;
   }
-  .nav-link:hover,
-  .nav-link.is-active {
+  .nav-link:hover {
     color: var(--color-accent);
+  }
+  .nav-link.is-active {
+    color: var(--color-ink);
   }
 </style>

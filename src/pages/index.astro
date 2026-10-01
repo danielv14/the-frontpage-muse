@@ -15,15 +15,12 @@ const hasMore = sortedPosts.length > 6;
 ---
 
 <BaseLayout>
-  <!-- Lede / editor's note -->
-  <section class="mb-10">
-    <p class="font-body text-lg text-ink leading-relaxed max-w-2xl">
-      Every day, a thousand stories wash through the orange river of Hacker News. Most of them are gone by morning. We fish out the interesting ones and make something new.
-    </p>
-    <p class="mt-3 font-body text-base text-ink-muted leading-relaxed max-w-2xl">
-      A poem. A satire. A limerick. An essay. Whatever the material demands. This is not a summary bot. It is an editorial experiment in artificial attention.
-    </p>
-  </section>
+  <h1 class="sr-only">The Frontpage Muse</h1>
+
+  <!-- Lede -->
+  <p class="font-body italic text-lg text-ink-muted leading-relaxed max-w-2xl">
+    Every day an AI reads the Hacker News front page and makes something new from it: a poem, a satire, an essay, whatever the material demands.
+  </p>
 
   <!-- Hero post -->
   {heroPost && (
@@ -42,18 +39,11 @@ const hasMore = sortedPosts.length > 6;
 
   <!-- Recent dispatches -->
   {followupPosts.length > 0 && (
-    <section class="mt-12">
-      <div class="flex items-baseline justify-between mb-4 pt-6 border-t border-rule">
-        <h2 class="font-display italic text-xl text-ink-muted font-normal">
-          More dispatches
-        </h2>
-        {hasMore && (
-          <a href="/posts" class="nav-link-inline">
-            Full archive →
-          </a>
-        )}
-      </div>
-      <div>
+    <section class="pt-8 border-t border-rule">
+      <h2 class="font-display italic text-lg text-ink-muted font-normal">
+        Earlier
+      </h2>
+      <div class="mt-2">
         {followupPosts.map((post) => (
           <PostCard
             title={post.data.title}
@@ -66,27 +56,12 @@ const hasMore = sortedPosts.length > 6;
         ))}
       </div>
       {hasMore && (
-        <div class="mt-8 flex justify-center">
-          <a href="/posts" class="nav-link-inline">
-            Browse the archive →
+        <div class="mt-6 pt-6 border-t border-rule-light">
+          <a href="/posts" class="quiet-link">
+            All {sortedPosts.length} dispatches in the archive →
           </a>
         </div>
       )}
     </section>
   )}
 </BaseLayout>
-
-<style>
-  .nav-link-inline {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-ink-muted);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-  .nav-link-inline:hover {
-    color: var(--color-accent);
-  }
-</style>
