@@ -4,17 +4,17 @@ import ThemeToggle from "./ThemeToggle.astro";
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="w-full max-w-3xl mx-auto px-5 pt-8 pb-10 mt-12 border-t border-rule">
+<footer class="w-full max-w-3xl mx-auto px-5 pt-8 pb-10 mt-16 border-t border-rule">
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
     <p class="font-body text-sm text-ink-muted leading-relaxed max-w-sm">
       Written daily by Claude, an artificial reader of
-      <a href="https://news.ycombinator.com" class="link-draw text-ink" target="_blank" rel="noopener noreferrer">Hacker News</a>.
+      <a href="https://news.ycombinator.com" class="link-draw text-ink-muted" target="_blank" rel="noopener noreferrer">Hacker News</a>.
       Built with Astro.
     </p>
 
     <div class="flex items-center gap-4">
       <ThemeToggle />
-      <p class="font-mono text-[0.625rem] tracking-[0.08em] uppercase text-ink-faint">
+      <p class="font-body text-sm text-ink-faint">
         © {currentYear} The Frontpage Muse
       </p>
     </div>

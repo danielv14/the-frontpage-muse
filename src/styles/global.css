@@ -132,33 +132,41 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration-color: var(--color-accent);
 }
 
-/* ---- Kicker / format chip ---- */
+/* ---- Meta line: format · date · reading time ---- */
 
-.kicker {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-ink-muted);
-}
-
-/* ---- Issue line: VOL · NO · DATE ---- */
-
-.issue-line {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.meta {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  line-height: 1.5;
   color: var(--color-ink-faint);
   display: flex;
-  align-items: center;
-  gap: 0.625rem;
+  align-items: baseline;
+  gap: 0.5rem;
   flex-wrap: wrap;
 }
 
-.issue-line .issue-sep {
+.meta .meta-format {
+  font-style: italic;
+  color: var(--color-ink-muted);
+}
+
+.meta .meta-sep {
   color: var(--color-rule);
+}
+
+/* ---- Quiet text link (back links, "see all") ---- */
+
+.quiet-link {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--color-ink-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.quiet-link:hover,
+.quiet-link:focus-visible {
+  color: var(--color-accent);
 }
 
 /* ---- Section rule (formerly ornament) ---- */
