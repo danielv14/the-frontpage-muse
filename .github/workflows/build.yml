@@ -1,0 +1,63 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
+
+      - name: Verify build output
+        run: |
+          set -euo pipefail
+          missingPages=0
+
+          for requiredFile in index.html 404.html about/index.html posts/index.html magazine/index.html sitemap-index.xml; do
+            if [ ! -f "dist/$requiredFile" ]; then
+              echo "::error::Missing dist/$requiredFile"
+              missingPages=$((missingPages + 1))
+            fi
+          done
+
+          for postFile in src/content/posts/*.md; do
+            postSlug=$(basename "$postFile" .md)
+            if [ ! -f "dist/posts/$postSlug/index.html" ]; then
+              echo "::error file=$postFile::Post did not render to dist/posts/$postSlug/index.html"
+              missingPages=$((missingPages + 1))
+            fi
+          done
+
+          for magazineFile in src/content/magazines/*.md; do
+            magazineSlug=$(basename "$magazineFile" .md)
+            if [ ! -f "dist/magazine/$magazineSlug/index.html" ]; then
+              echo "::error file=$magazineFile::Magazine issue did not render to dist/magazine/$magazineSlug/index.html"
+              missingPages=$((missingPages + 1))
+            fi
+          done
+
+          if [ "$missingPages" -gt 0 ]; then
+            echo "::error::$missingPages expected page(s) missing from build output"
+            exit 1
+          fi
+
+          echo "All $(ls src/content/posts/*.md | wc -l) posts and $(ls src/content/magazines/*.md | wc -l) magazine issues rendered."
